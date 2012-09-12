@@ -12,7 +12,10 @@ class HomeController < ApplicationController
     @products = ShopifyAPI::Product.find(:all, :params => {:limit => 3})
 
     # get latest 3 orders
-    @orders   = ShopifyAPI::Order.find(:all, :params => {:limit => 3, :order => "created_at DESC" })
+   # @orders   = ShopifyAPI::Order.find(:all, :params => {:limit => 3, :order => "created_at DESC" })
+    
+    # get latest 10 orders
+      @orders   = ShopifyAPI::Order.find(:all, :params => {:limit => 10, :fields => "created_at,id,name,total-price,currency,financial_status,billing_address,line_items", :order => "created_at DESC" })
   end
   
 end

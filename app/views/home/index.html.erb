@@ -1,21 +1,8 @@
 <div id="sidebar">
-  <h3>Where to start</h3>
-  <h4>Check out the <code style="font-size: 140%">home_controller</code></h4>
-
+  <h3>Brand Sales Report</h3>
+  
   <p class="description">
-    The controller in this demo application fetches the latest 3 orders and products and makes them available as instance variables <code style="color: #218BCE">@orders</code> and <code style="color: #218BCE">@products</code>.
-  </p>
-
-  <h4>Check out the <code>index</code> template</h4>
-
-  <p class="description">
-    This is the Ruby template you are currently looking at. It is located at:<br />  
-  </p>
-
-  <p style="background: #fff; margin-left: 4px"><code>views/home/index.html.erb</code></p>
-
-  <p class="description">
-    Have a look at the markup and Ruby code to see how the Shopify API is being used.
+   This report shows you your sales by brand from your Shopify store.
   </p>
   
   <h3>Additional documentation</h3>
@@ -56,6 +43,22 @@
     <em class="note">There are no orders in your store.</em>
 
   <% else %>
+<% vendors = Hash.new %>
+    <% @orders.each do |order| %>
+    	<% order.line_items.each do |line_item| %>
+
+		           <span class="note"><% vendors[line_item.vendor] = line_item.price %></span>
+
+		    <% end %>
+
+    <% end %>
+
+<% 	vendors.each do |key, value|
+	  puts key
+	 puts value
+	end
+	
+	%>
 
     <ul>
     <% @orders.each do |order| %>
