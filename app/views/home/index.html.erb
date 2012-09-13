@@ -34,73 +34,58 @@
   </p>
 </div>
 
-
 <div id="orders">
-  <h2>Your recent sales orders</h2>
+  <h2>Sales By Brand</h2>
 
   <% if @orders.blank? %>  
-
     <em class="note">There are no orders in your store.</em>
 
   <% else %>
-<% vendors = Hash.new %>
-    <% @orders.each do |order| %>
+
+<% vend = {"ordercount" => 0} %>
+
+<% @orders.each do |order| %>
+
+<% if order.financial_status = "authorized" or order.financial_status = "paid"  then %>
+	<% if order.cancel_reason.blank? %>
     	<% order.line_items.each do |line_item| %>
-
-		           <span class="note"><% vendors[line_item.vendor] = line_item.price %></span>
-
-		    <% end %>
-
+ 			<% if vend[line_item.vendor].nil? then
+				vend[line_item.vendor] = (line_item.price.to_i * line_item.quantity.to_i) %>  
+			<% else
+				vend[line_item.vendor] += (line_item.price.to_i * line_item.quantity.to_i) %>
+		<%	end
+		vend["ordercount"] += line_item.quantity.to_i %>
+		<% end %>
+ <% end %>
     <% end %>
+<% end %>
+There were <strong><%= vend["ordercount"] %></strong> products sold in this period. <%= @orders.size %> orders fetched from Shopify. <br /> 
 
-<% 	vendors.each do |key, value|
-	  puts key
-	 puts value
-	end
-	
-	%>
+Select orders date range:
 
-    <ul>
-    <% @orders.each do |order| %>
-      <li>
-        <div class="order box">
-          <div class="wrapper">
-            <strong><%= link_to order.name, "https://#{current_shop.url}/admin/orders/#{order.id}" %></strong>
-            <span class="price"><%= order.total_price %> <%= order.currency %></span>
-            <span class="highlight"><%= order.financial_status %></span>
-            by <span class="note"><%= order.billing_address.name %></span>
-          </div>
-        </div>
-      </li>
-    <% end %>
-    </ul>
+
+<% form_for(:user) do |f| %>
+  <%= f.datepicker 'birthday' %>
+  <%= f.submit 'Create' %>
+<% end %>
+
+
+<ul>
+	<% vend = vend.sort {|a,b| -1*(a[1]<=>b[1]) }    %>
+  <% 	vend.each do |key, value| %>
+     <li>
+       <div class="order box">
+         <div class="wrapper">
+           <strong> <%= key %></strong>
+           <span class="price"><%= number_to_currency(value, :unit => "£") %></span>
+           <span class="highlight"></span>
+           <span class="note"></span>
+         </div>
+       </div>
+     </li>
+   <% end %>
+   </ul>
+
 
   <% end %>
 </div>
-
-
-<h2>Some of your products</h2>
-
-<% if @products.blank? %>
-
-  <em class="note">There are no products in your store.</em>
-
-<% else %>
-
-  <% @products.each do |product| %>
-    <div class="product box">
-      <div class="wrapper">
-        <%= image_tag product.images.first.small rescue '' %>
-
-        <h4><%= link_to product.title, "https://#{current_shop.url}/admin/products/#{product.id}" %></h4>
-
-        <p class="price"><%= product.price_range %> <%= current_shop.shop.currency %></p>
-        <p style="margin-bottom: 0"><%= product.product_type %> <span class="note">type</span></p>
-        <p style="margin: 0"><%= product.vendor %> <span class="note">vendor</span></p>
-      
-        <div style="clear:left"></div>
-      </div>
-    </div>
-  <% end %>
-
-<% end %>
