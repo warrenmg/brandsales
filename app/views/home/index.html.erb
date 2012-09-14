@@ -1,62 +1,37 @@
 <div id="sidebar">
-  <h3>Brand Sales Report</h3>
+  <h3>Orders KPI</h3>
   
   <p class="description">
-   This report shows you your sales by brand from your Shopify store.
   </p>
   
-  <h3>Additional documentation</h3>
+  <h3> <%= @orders.size %> total orders</h3>
 
-  <p class="description">
-    Become an expert:
-  </p>
+ <h3> <%= @orders.size - @vend["ordercancelled"] %> open/closed orders</h3>
+
+  <h3><%= @vend["ordercancelled"] %> cancelled orders     <span class="note">(<%= number_to_percentage(@order_cancel_perc) %>)</span> </h3>
+
+ <h3><%= @vend["ordercount"] %> items sold <span class="note"><%= '%.2f' % (@vend["ordercount"].to_d / (@orders.size - @vend["ordercancelled"]).to_d) %> items per order </span></h3>
 
   <ul>
     <li>
-      <%= link_to 'API documentation', 'http://www.shopify.com/developers/api/' %>
-      <span class="note">The reference: what you can do with the Shopify API.</span>
+      <%= link_to 'Store Admin', 'http://www.shopify.com/developers/api/' %>
+      <span class="note">Click here to back to your store admin area</span>
     </li>
-    <li>
-      <%= link_to 'Wiki', 'http://wiki.shopify.com/' %>
-      <span class="note">Get more information and share your knowledge.</span>
-    </li>
-    <li>
-      <%= link_to 'Forum', 'http://forums.shopify.com/community' %>
-      <span class="note">Ask questions and see what others already wanted to know.</span>
-    </li>
+
   </ul>
 
-  <h3>Once you're ready</h3>
-
-  <p class="description">
-    We'd love to see what you create using the Shopify API. 
-    Find out how to share your application with the world and read the latest information on the <%= link_to 'API Publishing Page', 'http://www.shopify.com/developers/publishing/' %>.
-  </p>
 </div>
 
 <div id="orders">
   <h2>Sales By Brand</h2>
-<script>
-	$(function() {
-		$( "#datepicker" ).datepicker({
-			showButtonPanel: true
-		});
-	});
-	</script>
 
 Select orders date range:
-<%= params %> <br />
-<%= params[:orderfilter][:startdate] %><br />
-<%= params[:orderfilter][:enddate] %><br />
-<%= params[:orderfilter][:startdate].to_time.strftime('%Y-%m-%d')  %> to 
-<%= params[:orderfilter][:enddate].to_time.strftime('%Y-%m-%d')   %>
+<%#= params %> <br />
 
 <%= form_tag do  %>
-
- <%#= text_field_tag "startdate" %> <%#= text_field_tag "enddate" %>
- <%= datepicker_input "orderfilter","startdate", :dateFormat => "yy-mm-dd" %>
-<%= datepicker_input "orderfilter","enddate", :dateFormat => "yy-mm-dd" %>
-  <%= submit_tag("Search") %>
+	<%= datepicker_input "orderfilter","startdate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
+	<%= datepicker_input "orderfilter","enddate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
+	<%= submit_tag("Search") %>
 <% end %>
 
   <% if @orders.blank? %>  
@@ -64,29 +39,10 @@ Select orders date range:
 
   <% else %>
 
-<% vend = {"ordercount" => 0} %>
-
-<% @orders.each do |order| %>
-
-<% if order.financial_status = "authorized" or order.financial_status = "paid"  then %>
-	<% if order.cancel_reason.blank? %>
-    	<% order.line_items.each do |line_item| %>
- 			<% if vend[line_item.vendor].nil? then
-				vend[line_item.vendor] = (line_item.price.to_i * line_item.quantity.to_i) %>  
-			<% else
-				vend[line_item.vendor] += (line_item.price.to_i * line_item.quantity.to_i) %>
-		<%	end
-		vend["ordercount"] += line_item.quantity.to_i %>
-		<% end %>
- <% end %>
-    <% end %>
-<% end %>
-There were <strong><%= vend["ordercount"] %></strong> products sold in this period. <%= @orders.size %> orders fetched from Shopify. <br /> 
-
-
 <ul>
-	<% vend = vend.sort {|a,b| -1*(a[1]<=>b[1]) }    %>
-  <% 	vend.each do |key, value| %>
+<% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }    %>
+<% 	@vend.each do |key, value| %>
+<% if key != "ordercount" && key != "Jura Watches" then %>
      <li>
        <div class="order box">
          <div class="wrapper">
@@ -97,9 +53,9 @@ There were <strong><%= vend["ordercount"] %></strong> products sold in this peri
          </div>
        </div>
      </li>
+ <% end %>
    <% end %>
    </ul>
+<% end %>
 
-
-  <% end %>
 </div>
