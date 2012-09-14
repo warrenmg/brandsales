@@ -39,3 +39,7 @@ gem 'jquery-rails'
 gem 'shopify_app'
 
 gem 'jquery_datepicker'
+
+group :assets do
+  gem 'jquery-ui-rails'
+end

@@ -36,6 +36,28 @@
 
 <div id="orders">
   <h2>Sales By Brand</h2>
+<script>
+	$(function() {
+		$( "#datepicker" ).datepicker({
+			showButtonPanel: true
+		});
+	});
+	</script>
+
+Select orders date range:
+<%= params %> <br />
+<%= params[:orderfilter][:startdate] %><br />
+<%= params[:orderfilter][:enddate] %><br />
+<%= params[:orderfilter][:startdate].to_time.strftime('%Y-%m-%d')  %> to 
+<%= params[:orderfilter][:enddate].to_time.strftime('%Y-%m-%d')   %>
+
+<%= form_tag do  %>
+
+ <%#= text_field_tag "startdate" %> <%#= text_field_tag "enddate" %>
+ <%= datepicker_input "orderfilter","startdate", :dateFormat => "yy-mm-dd" %>
+<%= datepicker_input "orderfilter","enddate", :dateFormat => "yy-mm-dd" %>
+  <%= submit_tag("Search") %>
+<% end %>
 
   <% if @orders.blank? %>  
     <em class="note">There are no orders in your store.</em>
@@ -60,14 +82,6 @@
     <% end %>
 <% end %>
 There were <strong><%= vend["ordercount"] %></strong> products sold in this period. <%= @orders.size %> orders fetched from Shopify. <br /> 
-
-Select orders date range:
-
-
-<% form_for(:user) do |f| %>
-  <%= f.datepicker 'birthday' %>
-  <%= f.submit 'Create' %>
-<% end %>
 
 
 <ul>
