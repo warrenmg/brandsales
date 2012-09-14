@@ -1,46 +1,38 @@
 <div id="sidebar">
   <h3>Orders KPI</h3>
+  <span class="note"><%= @orderstart.to_time.strftime('%d %b %y') %> to <%= @orderend.to_time.strftime('%d %b %y') %> <br /
+	><%= @orderdiff %> days - <%= (@orderactive.to_d / @orderdiff.to_d).round(1) %> orders per day
+  </span>
   
-  <p class="description">
-  </p>
-  
-  <h3> <%= @orders.size %> total orders</h3>
-
- <h3> <%= @orders.size - @vend["ordercancelled"] %> open/closed orders</h3>
-
+  <h3><%= @orders.size %> total orders</h3>
+  <h3><%= @orderactive %> ok orders</h3>
   <h3><%= @vend["ordercancelled"] %> cancelled orders     <span class="note">(<%= number_to_percentage(@order_cancel_perc) %>)</span> </h3>
-
- <h3><%= @vend["ordercount"] %> items sold <span class="note"><%= '%.2f' % (@vend["ordercount"].to_d / (@orders.size - @vend["ordercancelled"]).to_d) %> items per order </span></h3>
+  <h3><%= @vend["ordercount"] %> items sold <span class="note"><%= (@vend["ordercount"].to_d / @orderactive.to_d).round(2) %> items per order </span></h3>
 
   <ul>
-    <li>
-      <%= link_to 'Store Admin', 'http://www.shopify.com/developers/api/' %>
+    <li><%= link_to 'Store Admin', 'http://www.shopify.com/developers/api/' %>
       <span class="note">Click here to back to your store admin area</span>
     </li>
-
   </ul>
-
 </div>
 
 <div id="orders">
   <h2>Sales By Brand</h2>
-
 Select orders date range:
 <%#= params %> <br />
 
 <%= form_tag do  %>
-	<%= datepicker_input "orderfilter","startdate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
-	<%= datepicker_input "orderfilter","enddate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
+	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
+	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
 	<%= submit_tag("Search") %>
 <% end %>
 
   <% if @orders.blank? %>  
     <em class="note">There are no orders in your store.</em>
-
   <% else %>
 
 <ul>
-<% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }    %>
+<% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }  %>
 <% 	@vend.each do |key, value| %>
 <% if key != "ordercount" && key != "Jura Watches" then %>
      <li>
@@ -57,5 +49,4 @@ Select orders date range:
    <% end %>
    </ul>
 <% end %>
-
 </div>
