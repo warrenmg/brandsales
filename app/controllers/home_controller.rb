@@ -29,20 +29,25 @@ class HomeController < ApplicationController
    @orderdiff = (@orderend.to_date - @orderstart.to_date).to_i
 
       @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 1, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
-      @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 2, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
-      @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 3, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
- 
-      @vend = {"ordercount" => 0, "ordercancelled" => 0}
+      @orders.size > 249 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 2, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : ""
+      @orders.size > 499 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 3, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : ""
+      @orders.size > 749 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 4, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
+      @orders.size > 999 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 5, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
+      @orders.size > 1249 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 6, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
+      @orders.size > 1499 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 7, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
+      
+      @vend = {"ordercount" => 0, "ordercancelled" => 0, "totalsales" => 0}
 
       @orders.each do |order| 
 
       if order.financial_status = "authorized" or order.financial_status = "paid"  then 
       	 if order.cancel_reason.blank? 
-          	   order.line_items.each do |line_item| 
+          order.line_items.each do |line_item| 
+            @vend["totalsales"] += (line_item.price.to_d * line_item.quantity.to_d)
        			if @vend[line_item.vendor].nil? then
-      				@vend[line_item.vendor] = (line_item.price.to_i * line_item.quantity.to_i)   
+      				@vend[line_item.vendor] = (line_item.price.to_d * line_item.quantity.to_d)   
       			else
-      				@vend[line_item.vendor] += (line_item.price.to_i * line_item.quantity.to_i) 
+      			  @vend[line_item.vendor] += (line_item.price.to_d * line_item.quantity.to_d) 
       		    end
       			@vend["ordercount"] += line_item.quantity.to_i 
       		  end 

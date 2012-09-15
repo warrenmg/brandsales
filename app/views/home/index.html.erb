@@ -1,9 +1,9 @@
 <div id="sidebar">
-  <h3>Orders KPI</h3>
-  <span class="note"><%= @orderstart.to_time.strftime('%d %b %y') %> to <%= @orderend.to_time.strftime('%d %b %y') %> <br /
-	><%= @orderdiff %> days - <%= (@orderactive.to_d / @orderdiff.to_d).round(1) %> orders per day
-  </span>
-  
+  <h3><%= @orderstart.to_time.strftime('%d %b %y') %> to <%= @orderend.to_time.strftime('%d %b %y') %></h3>
+  <span class="note"><br /><%= @orderdiff %> days </span>
+
+  <h3><%=  number_to_currency( @vend["totalsales"], :unit => "£") %></h3>
+  <h3><%= (@orderactive.to_d / @orderdiff.to_d).round(1) %> orders per day</h3>
   <h3><%= @orders.size %> total orders</h3>
   <h3><%= @orderactive %> ok orders</h3>
   <h3><%= @vend["ordercancelled"] %> cancelled orders     <span class="note">(<%= number_to_percentage(@order_cancel_perc) %>)</span> </h3>
@@ -34,7 +34,7 @@ Select orders date range:
 <ul>
 <% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }  %>
 <% 	@vend.each do |key, value| %>
-<% if key != "ordercount" && key != "Jura Watches" then %>
+<% if key != "ordercount" && key != "ordercancelled" && key != "totalsales" &&  key != "Jura Watches" then %>
      <li>
        <div class="order box">
          <div class="wrapper">
