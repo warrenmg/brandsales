@@ -1,6 +1,5 @@
 <div id="sidebar">
-  <h3><%= @orderstart.to_time.strftime('%d %b %y') %> to <%= @orderend.to_time.strftime('%d %b %y') %></h3>
-  <span class="note"><br /><%= @orderdiff %> days </span>
+<h3><%= @orderstart.to_time.strftime('%d %b %y') %> to <%= @orderend.to_time.strftime('%d %b %y') %><span class="note"><br /><%= @orderdiff %> days </span></h3>
 
   <h3><%=  number_to_currency( @vend["totalsales"], :unit => "£") %></h3>
   <h3><%= (@orderactive.to_d / @orderdiff.to_d).round(1) %> orders per day</h3>
@@ -16,37 +15,44 @@
   </ul>
 </div>
 
-<div id="orders">
-  <h2>Sales By Brand</h2>
-Select orders date range:
-<%#= params %> <br />
-
-<%= form_tag do  %>
-	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
-	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd", :showButtonPanel => "true" %>
+<div id="orders">	
+<h4>Sales By Brand <span class="datenote">
+Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
+	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd",:value => @orderstart,:size => 12, :showButtonPanel => "true" %>
+	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd",:value => @orderend,:size => 12, :showButtonPanel => "true" %>
 	<%= submit_tag("Search") %>
-<% end %>
-
+<% end %></span>
+</h4>
   <% if @orders.blank? %>  
     <em class="note">There are no orders in your store.</em>
   <% else %>
 
-<ul>
+<!--<ul>-->
+<table>
 <% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }  %>
-<% 	@vend.each do |key, value| %>
+<% 
+	@brandcount = 0
+	@vend.each do |key, value| %>
 <% if key != "ordercount" && key != "ordercancelled" && key != "totalsales" &&  key != "Jura Watches" then %>
-     <li>
+<tr class="box">     
+	<td><%= @brandcount %></td><td class="brand"><strong> <%= key %></strong></td><td class="price"><%= number_to_currency(value, :unit => "£") %></td>
+</tr>
+<!--
+<li>
        <div class="order box">
          <div class="wrapper">
-           <strong> <%= key %></strong>
+           <span class="brand"><strong> <%= key %></strong></span>
            <span class="price"><%= number_to_currency(value, :unit => "£") %></span>
            <span class="highlight"></span>
            <span class="note"></span>
          </div>
        </div>
-     </li>
+     </li> -->
  <% end %>
-   <% end %>
-   </ul>
+   <% 
+	@brandcount += 1
+
+end %>
+   <!-- </ul> -->
 <% end %>
 </div>

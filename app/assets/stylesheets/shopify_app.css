@@ -8,6 +8,10 @@ h1 { font-weight: normal; font-size: 24px; }
 h1 a { color: #FFFAD5; text-decoration: none; }
 h2 { font-weight: normal; margin-top: 24px; }
 h3 { margin-top: 24px; }
+h4 { font-weight: normal; margin-top: 14px; font-size: 125%;  }
+
+.datenote { color: #777; font-size: 85%; }
+.orderform { display: inline; margin:0; padding:0;}
 
 #header {
   background: #2d3337 url('../images/logo.png') 20px 50% no-repeat;
@@ -142,6 +146,13 @@ code { font-size: 140%; }
   font-size: 15px;
   font-family: Times, "Times New Roman";
   font-style: italic;
+  padding: 6px;
+}
+
+.brand {
+  color: #000;
+  font-size: 15px;
+  padding: 6px;
 }
 
 #orders ul {
@@ -197,14 +208,14 @@ code { font-size: 140%; }
 }
 
 .box {
-  padding: 0;
+  padding: 5px;
   background:#FAFAFA url('../images/box-bg2.gif') repeat-x scroll left top;
   border:1px solid #CCCCCC;
 }
 
 .wrapper {
   border:1px solid #FFFFFF;
-  padding: 10px;
+  padding: 7px;
 }
 
 .info {

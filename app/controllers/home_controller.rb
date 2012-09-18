@@ -44,11 +44,9 @@ class HomeController < ApplicationController
       	 if order.cancel_reason.blank? 
           order.line_items.each do |line_item| 
             @vend["totalsales"] += (line_item.price.to_d * line_item.quantity.to_d)
-       			if @vend[line_item.vendor].nil? then
-      				@vend[line_item.vendor] = (line_item.price.to_d * line_item.quantity.to_d)   
-      			else
-      			  @vend[line_item.vendor] += (line_item.price.to_d * line_item.quantity.to_d) 
-      		    end
+            
+            @vend[line_item.vendor].nil? ? @vend[line_item.vendor] = (line_item.price.to_d * line_item.quantity.to_d) : @vend[line_item.vendor] += (line_item.price.to_d * line_item.quantity.to_d) 
+            
       			@vend["ordercount"] += line_item.quantity.to_i 
       		  end 
       	 else 
