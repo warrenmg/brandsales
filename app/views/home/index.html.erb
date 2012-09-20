@@ -18,8 +18,8 @@
 <div id="orders">	
 <h4>Sales By Brand <span class="datenote">
 Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
-	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd",:value => @orderstart,:size => 12, :showButtonPanel => "true" %>
-	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd",:value => @orderend,:size => 12, :showButtonPanel => "true" %>
+	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd",:size => 12, :showButtonPanel => "true" %>
+	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd",:size => 12, :showButtonPanel => "true" %>
 	<%= submit_tag("Search") %>
 <% end %></span>
 </h4>
@@ -29,13 +29,13 @@ Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
 
 <!--<ul>-->
 <table>
-<% @vend = @vend.sort {|a,b| -1*(a[1]<=>b[1]) }  %>
+<% @vend = @vend.sort {|a,b,c| -1*(a[1]<=>b[1]) }  %>
 <% 
 	@brandcount = 0
-	@vend.each do |key, value| %>
+	@vend.each do |key, value,value2| %>
 <% if key != "ordercount" && key != "ordercancelled" && key != "totalsales" &&  key != "Jura Watches" then %>
 <tr class="box">     
-	<td><%= @brandcount %></td><td class="brand"><strong> <%= key %></strong></td><td class="price"><%= number_to_currency(value, :unit => "£") %></td>
+	<td><%= @brandcount %></td><td class="brand"><strong> <%= key %></strong></td><td class="price"><%= number_to_currency(value, :unit => "£") %></td><td class="price"><%= number_to_currency(value2, :unit => "£") %></td>
 </tr>
 <!--
 <li>
@@ -51,8 +51,8 @@ Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
  <% end %>
    <% 
 	@brandcount += 1
-
 end %>
    <!-- </ul> -->
 <% end %>
-</div>
+<!--</div> -->
+</table>

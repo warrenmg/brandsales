@@ -46,6 +46,7 @@ class HomeController < ApplicationController
             @vend["totalsales"] += (line_item.price.to_d * line_item.quantity.to_d)
             
             @vend[line_item.vendor].nil? ? @vend[line_item.vendor] = (line_item.price.to_d * line_item.quantity.to_d) : @vend[line_item.vendor] += (line_item.price.to_d * line_item.quantity.to_d) 
+            @vend[line_item.vendor][order.created_at.strftime("%m")].nil? ? @vend[line_item.vendor][order.created_at.strftime("%m")] = (line_item.price.to_d * line_item.quantity.to_d) : @vend[line_item.vendor] += (line_item.price.to_d * line_item.quantity.to_d) 
             
       			@vend["ordercount"] += line_item.quantity.to_i 
       		  end 
