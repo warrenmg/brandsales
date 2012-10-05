@@ -10,7 +10,7 @@ class HomeController < ApplicationController
      
     current_host = "#{request.host}#{':' + request.port.to_s if request.port != 80}"
     #current_host = "http://#{request.host+request.fullpath}"
-    @callback_url = "http://brandsales.herokuapp.com/login/finalize"
+    @callback_url = "http://#{current_host}/login/finalize"
   end
   
   def index
@@ -74,7 +74,8 @@ class HomeController < ApplicationController
       @order_cancel_perc = (@vend["ordercancelled"].to_i / @orders.size.to_f * 100)
       @orderactive = (@orders.size - @vend["ordercancelled"]).to_i
       
-       @o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
+       #@o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
+       @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
       if @o_years
       @order_year = []
       @o_years.each do |oy|
@@ -142,7 +143,7 @@ private
 
 def check_orders(year)
           
-      @o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
+      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
       @order_year = []
       @o_years.each do |oy|
       @order_year << oy.year_list
@@ -150,11 +151,11 @@ def check_orders(year)
       #params[:year_var]
        puts "############################################################"
       
-    #  @local_orders = Order.find_by_sql("Select year(order_date) year, month(order_date) month, vendor_name,sum(price * no_of_items) totCost from orders where shopify_owner = '#{current_shop.url}' and year(order_date) ='#{year}' group by year,month,vendor_name")
+      @local_orders = Order.find_by_sql("Select extract(year from order_date) year_list, extract(month from order_date) month_list, vendor_name,sum(price * no_of_items) totCost from orders where shopify_owner = '#{current_shop.url}' and extract(year from order_date) ='#{year}' group by year_list,month_list,vendor_name")
       puts @local_orders.inspect
       
       
-     #  @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) vendor from orders where shopify_owner= '#{current_shop.url}'")
+       @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) vendor from orders where shopify_owner= '#{current_shop.url}'")
        @prices = Array.new
        @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
        
