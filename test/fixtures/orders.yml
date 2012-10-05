@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  shopify_order_id: 1
+  shopify_name: 1
+  order_date: 2012-10-01 10:20:46
+  no_of_items: 1
+  price: 1.5
+  vendor_name: MyString
+
+two:
+  shopify_order_id: 1
+  shopify_name: 1
+  order_date: 2012-10-01 10:20:46
+  no_of_items: 1
+  price: 1.5
+  vendor_name: MyString

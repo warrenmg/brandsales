@@ -1,0 +1,8 @@
+<div id="orders">	
+<h4>Sales By Brand <span class="datenote">
+Date range:<%= form_tag({:action => "search_orders"},{:class => "orderform"}) do  %>
+	<%= datepicker_input "","startdate", :dateFormat => "yy-mm-dd",:size => 12, :showButtonPanel => "true" %>
+	<%= datepicker_input "","enddate", :dateFormat => "yy-mm-dd",:size => 12, :showButtonPanel => "true" %>
+	<%= submit_tag("Search") %>
+<% end %></span>
+</h4>

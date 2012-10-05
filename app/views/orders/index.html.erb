@@ -1,0 +1,40 @@
+<h1>Listing orders</h1>
+
+<%= render :partial=> 'search_filter' %>
+<% if !@orders.blank? %>
+<table>
+  <tr>
+    <th>Shopify order</th>
+    <th>Shopify name</th>
+    <th>Order date</th>
+    <th>No of items</th>
+    <th>Price</th>
+    <th>Vendor name</th>
+    <th>Owner Name</th>
+    
+  </tr>
+  
+  
+<% @orders.each do |order| %>
+  <tr>
+    <td><%= order.shopify_order_id %></td>
+    <td><%= order.shopify_name %></td>
+    <td><%= order.order_date.strftime("%m/%d/%y %I:%M%p").downcase() %></td>
+    <td><%= order.no_of_items %></td>
+    <td><%= order.price %></td>
+    <td><%= order.vendor_name %></td>
+    <td><%= order.shopify_owner %></td>
+    <td><%= link_to 'Show', order %></td>
+    <td><%= link_to 'Destroy', order, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+  
+</table>
+<% else %>
+ <em class="note">There are no orders in your store.</em>
+<% end %>
+<br />
+
+<%#= link_to 'New Order', new_order_path %>
+
+
