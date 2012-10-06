@@ -115,13 +115,13 @@ Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
   <!-------------------------------------------------------------------------------------->
 <!--<ul>-->
 <table>
-<% @vend = @vend.sort {|a,b,c| -1*(a[1]<=>b[1]) }  %>
+<%# @vend = @vend.sort {|a,b,c| -1*(a[1]<=>b[1]) }  %>
 <% 
 	@brandcount = 0
 	@vend.each do |key, value,value2| %>
-<% if key != "ordercount" && key != "ordercancelled" && key != "totalsales" &&  key != "Jura Watches" then %>
+<% #if key != "ordercount" && key != "ordercancelled" && key != "totalsales" &&  key != "Jura Watches" then %>
 <tr class="box">     
-	<td><%= @brandcount %></td><td class="brand"><strong> <%= key %></strong></td><td class="price"><%= number_to_currency(value, :unit => "£") %></td><td class="price"><%= number_to_currency(value2, :unit => "£") %></td>
+	<td><%#= @brandcount %></td><td class="brand"><strong> <%= key %></strong></td><td class="price"><%#= number_to_currency(value, :unit => "£") %></td><td class="price"><%#= number_to_currency(value2, :unit => "£") %></td>
 </tr>
 <!--
 <li>
@@ -136,7 +136,7 @@ Date range:<%= form_tag({:action => "index"},{:class => "orderform"}) do  %>
      </li> -->
  <% end %>
    <% 
-	@brandcount += 1
+#	@brandcount += 1
 end %>
    <!-- </ul> -->
 
