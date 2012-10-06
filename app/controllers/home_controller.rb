@@ -69,7 +69,7 @@ class HomeController < ApplicationController
 
        	 if shop_order.cancel_reason.nil? 
            shop_order.line_items.each do |line_item| 
-             @vend["totalsales"] += (line_item.price.to_i * line_item.quantity).to_f  
+             #@vend["totalsales"] += (line_item.price.to_i * line_item.quantity).to_f  
              @order.shopify_order_id = shop_order.id
              @order.shopify_name = shop_order.name
              @order.order_date = shop_order.created_at
