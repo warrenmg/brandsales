@@ -30,15 +30,21 @@ class HomeController < ApplicationController
    @orderstart = Date.parse "#{today.year}-01-01" 
    @orderend = Date.today
    @orderdiff = (@orderend.to_date - @orderstart.to_date).to_i
+   @num = 250 
    
-
-      @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 1, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
-      @orders.size > 249 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 2, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : ""
-      @orders.size > 499 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 3, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : ""
-      @orders.size > 749 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 4, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
-      @orders.size > 999 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 5, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
-      @orders.size > 1249 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 6, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
-      @orders.size > 1499 ? @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 7, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" }) : "" 
+   @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => 1, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
+     
+      if @orders
+       @o_size = @orders.size
+       @page = 2
+        while @o_size >= @num-1 do
+        @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :created_at_min =>  @orderstart, :created_at_max => @orderend, :page => '{@page}', :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
+        @num += 250
+        @page+=1
+              
+            
+        end
+      end   
       
       @vend = {"ordercount" => 0, "ordercancelled" => 0, "totalsales" => 0}
       
@@ -99,12 +105,7 @@ class HomeController < ApplicationController
     @orders.each do |shop_order| 
       @order= Order.new
       @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopify_name => "#{shop_order.name}")
-      puts "##########"
-      puts @exitsing_order.inspect
-      puts shop_order.id.class.inspect
-      puts shop_order.name.class.inspect
-      puts Order.all.inspect
-      puts "##########"
+     
       if @existing_order.blank? 
       puts "order creatingggggggggggg"
       if shop_order.financial_status = "authorized" or shop_order.financial_status = "paid"  then 
@@ -157,17 +158,6 @@ def check_orders(yr)
        puts "############################################################"
       
       @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,sum(price * no_of_items) as totcost from orders where shopify_owner = '#{current_shop.url}' and extract(year from order_date) = #{yr} group by year_list,month_list,vendor_name")
-      @local_orders.each do  |l|
-       puts "############################################################"
-      puts l.inspect
-      puts l.year_list.class
-      puts l.vendor_name
-      puts l.month_list.class
-      puts l.totcost.class
-      
-       puts "############################################################"
-      end
-      
       
        @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopify_owner= '#{current_shop.url}' order by vendor_name"  )
       @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
