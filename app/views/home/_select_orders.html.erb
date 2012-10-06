@@ -24,12 +24,12 @@
       <% @local_orders.each do |l| %>
       <% if l.vendor_name == v.vendor %>
       <% @m.each do |m| %>
-      <% if l.month == m %>
+      <% if l.month_list == m.to_s %>
     
      
   <% @years[v.vendor] ||= {}%>
   <% @years[v.vendor][m] ||= [] %>
-  <% @years[v.vendor][m] << number_to_currency(l.totCost, :unit => "£") %>
+  <% @years[v.vendor][m] << number_to_currency(l.totcost, :unit => "£") %>
      
      <% end %>
    
@@ -65,11 +65,14 @@
     <% end %>
     
     <% else %>
+    
         	<td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td><td><%= number_to_currency(0,:unit => "£") %></td>
    <% end %>
   
   </tr> 
+    
  <% end %>
+
 
 
     
