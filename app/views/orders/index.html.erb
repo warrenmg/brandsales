@@ -1,17 +1,16 @@
 <h1>Listing orders</h1>
 
-<%= render :partial=> 'search_filter' %>
+<%#= render :partial=> 'search_filter' %>
 <% if !@orders.blank? %>
 <table>
   <tr>
-    <th>Shopify order</th>
-    <th>Shopify name</th>
-    <th>Order date</th>
+    <th>Shopify Order ID</th>
+    <th>Shopify Order No.</th>
+    <th>Order Date</th>
     <th>No of items</th>
     <th>Price</th>
-    <th>Vendor name</th>
-    <th>Owner Name</th>
-    
+    <th>Vendor Name</th>
+    <th colspan="2">Actions</th>
   </tr>
   
   
@@ -23,9 +22,8 @@
     <td><%= order.no_of_items %></td>
     <td><%= order.price %></td>
     <td><%= order.vendor_name %></td>
-    <td><%= order.shopify_owner %></td>
     <td><%= link_to 'Show', order %></td>
-    <td><%= link_to 'Destroy', order, confirm: 'Are you sure?', method: :delete %></td>
+    <td><%= link_to 'Delete', order, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
   

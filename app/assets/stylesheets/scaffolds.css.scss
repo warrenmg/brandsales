@@ -20,14 +20,15 @@ border-collapse:collapse;
 
 }
 table th {
-padding: 5px;
-
-}
-table td {
-padding: 5px;
+padding: 7px;
+background-color: #E0F8F7;
 border: 1px solid black;
 }
-table tr:hover { background-color: #eee; }
+table td {
+padding: 6px;
+border: 1px solid black;
+}
+table tr:hover { background-color: #E0F8F7; }
 
 
 pre {

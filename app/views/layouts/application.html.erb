@@ -14,7 +14,7 @@
     <p id="login-link">
       <% if current_shop %>
           <span class="note">current shop</span> <%= link_to current_shop.url, "https://#{current_shop.url}", :class => 'shop_name' %> <span class="note">|</span>
-          <%= link_to 'My Orders', orders_path %><span class="note">|</span>
+          <%#= link_to 'List Orders', orders_path %><span class="note">|</span>
           <%= link_to 'logout', logout_path %>
       <% end %>
     </p>
@@ -23,7 +23,7 @@
   <div id="container" class="clearfix">
     <ul id="tabs">
       <%= tab :index, {:controller => '/home'}, :label => 'Home' %>
-      <%= tab :design, {:controller => '/home', :action => 'design'}, :label => 'Design Help' %>
+      <%= tab :orders, {:controller => '/orders'}, :label => 'List Orders' %>
     </ul>
     
     <!-- Flash error & notice-->

@@ -23,8 +23,7 @@
    <select id="war_reg">
                     <% @order_year.each do |w| %>
 	          	        <option value="<%= w %>"><%= w %></option>
-    	         <% end %>
-    	           
+    	         <% end %>	           
 	       </select>
   <% end %>  <% end %>
 <div id="orders">	
@@ -34,7 +33,7 @@
     <em class="note">There are no orders in your store.</em>
   <% else %>
   
- <table border ="2">
+ <table>
   <tr>
     <th>Vendor Name</th>
     
@@ -46,19 +45,18 @@
     
    <% @m = [1,2,3,4,5,6,7,8,9,10,11,12]%> 
    <% @v_size = @local_vendors.size %>
-    <% @local_vendors.each do |v| %>
-    <% @newbrandtotal = 0 %>
+   <% @local_vendors.each do |v| %>
+   <% @newbrandtotal = 0 %>
   <tr>
   <th> <%= v.vendor %></th>
    
-    <% @years = {} %>
+   <% @years = {} %>
    <% @local_orders.each do |l| %>
    
    <% if l.vendor_name == v.vendor %>
    
    <% @m.each do |m| %>
      
-   
      <% if l.month_list == m.to_s %>
        
      <% @years[v.vendor] ||= {}%>
