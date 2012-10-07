@@ -29,8 +29,6 @@ class HomeController < ApplicationController
   
       pull_all_orders
       
-      build_years
-      
       check_orders(Time.now.year)       
  end
  
@@ -43,33 +41,44 @@ class HomeController < ApplicationController
      @order_year << oy.year_list
      end
      end
-   
  end
  
  def pull_all_orders
-    @num = 250 
-    @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
+   
+   @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{current_shop.url}'")
 
-       if @orders
-        @o_size = @orders.size
-        @page = 2
-         while @o_size >= @num-1 do
-         @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => '{@page}', :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
-         @num += 250
-         @page+=1
+@lastorderid.each do |topid|
+  @shopifysinceid = topid.shopifyorderid
+puts "Last order ID: #{topid.shopifyorderid}"
+end
+
+    @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
+  
+       if @orderscount > 0
+         @page = 0
+         @noofpages = @orderscount.divmod(250).first
+         puts "On page: #{@page} of #{@noofpages}" 
+        while @page <= @noofpages
+           puts "On page: #{@page} " 
+           @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :since_id => @shopifysinceid, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :since_id => @shopifysinceid, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason" })
+          @page += 1
          end
        end   
+       
+       if @orders 
 
        @orders.each do |shop_order| 
 
        @order= Order.new
        @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopify_name => shop_order.name)
+
        if @existing_order.blank?
+
        if shop_order.financial_status = "authorized" or shop_order.financial_status = "paid"  then 
 
        	 if shop_order.cancel_reason.nil? 
+       	    
            shop_order.line_items.each do |line_item| 
-             #@vend["totalsales"] += (line_item.price.to_i * line_item.quantity).to_f  
              @order.shopify_order_id = shop_order.id
              @order.shopify_name = shop_order.name
              @order.order_date = shop_order.created_at
@@ -78,20 +87,20 @@ class HomeController < ApplicationController
              @order.vendor_name = line_item.vendor
              @order.shopify_owner=current_shop.url
              @order.save
-              
-             line_item.price.blank? ? line_item.price = (line_item.price.to_i * line_item.quantity).to_s : line_item.price += (line_item.price.to_i * line_item.quantity).to_s 
-       		  end 
+            end 
        	 else 
-       	   # Nothing yet
+       	   # Cancelled Order
          end 
           end 
           end
         end 
-
+      end
  end
  
   def initial_pull
-    @orders = ShopifyAPI::Order.find(:all, :params => {:status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
+
+      @orders = ShopifyAPI::Order.find(:all, :params => {:status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
+ 
     
     @orders.each do |shop_order| 
       @order= Order.new

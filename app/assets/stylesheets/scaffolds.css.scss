@@ -12,6 +12,24 @@ p, ol, ul, td {
   line-height: 18px;
 }
 
+table {
+font-family: verdana, arial, helvetica, sans-serif;
+ font-size: 11px;
+ line-height: 18px;
+border-collapse:collapse;
+
+}
+table th {
+padding: 5px;
+
+}
+table td {
+padding: 5px;
+border: 1px solid black;
+}
+table tr:hover { background-color: #eee; }
+
+
 pre {
   background-color: #eee;
   padding: 10px;
