@@ -2,6 +2,21 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   #around_filter :shopify_session
+  #before_filter :ensure_merchant_has_paid
+  
+
+    # ...
+
+    def ensure_merchant_has_paid
+      unless ShopifyAPI::RecurringApplicationCharge.current
+        charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
+                                                               :price => 0.99, 
+                                                               :return_url => 'http://brandsales.heroku.com/charges/confirm',
+                                                                                                    :test => true)
+        redirect_to charge.confirmation_url
+      end
+    end
+  
  
  def check_order_owner
   order = Order.find(params[:id])
