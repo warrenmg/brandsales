@@ -38,11 +38,13 @@ puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
-      redirect_to return_address
-      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-      puts return_address.inspect
-      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-      session[:return_to] = nil
+      ensure_merchant_has_paid
+      
+     # redirect_to return_address
+      #puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     # puts return_address.inspect
+     # puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     # session[:return_to] = nil
     else
       flash[:error] = "Could not log in to Shopify store."
       redirect_to :action => 'index'

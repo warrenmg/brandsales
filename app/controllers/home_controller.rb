@@ -35,7 +35,7 @@ class HomeController < ApplicationController
   # @orderend = Date.today
   # @orderdiff = (@orderend.to_date - @orderstart.to_date).to_i
   
-      pull_all_orders
+      #pull_all_orders
       
       check_orders(Time.now.year)       
  end
@@ -103,6 +103,7 @@ end
           end
         end 
       end
+         redirect_to :action => 'index'
  end
  
   def initial_pull

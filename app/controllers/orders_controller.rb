@@ -4,7 +4,7 @@ before_filter :check_order_owner, :except =>[:index,:search_orders]
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.find(:all,:conditions => ["shopify_owner = ? ",current_shop.url])
+    @orders = Order.find(:all,:limit => 150, :order => "order_date DESC", :conditions => ["shopify_owner = ? ",current_shop.url])
 
     respond_to do |format|
       format.html # index.html.erb

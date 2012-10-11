@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   #around_filter :shopify_session
-  before_filter :ensure_merchant_has_paid, :except => 'confirm'
+  #before_filter :ensure_merchant_has_paid, :except => 'confirm'
   
 
     # ...
@@ -17,10 +17,11 @@ class ApplicationController < ActionController::Base
 
     def ensure_merchant_has_paid
         puts "CHECKING FOR CHARGE"
-   shopify_session do 
-      unless ShopifyAPI::RecurringApplicationCharge.current
-          puts "START CHARGE"
-        charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
+        shopify_session do 
+          puts "Shopify Session Check"
+          unless ShopifyAPI::RecurringApplicationCharge.current
+             puts "START CHARGE"
+             charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
                                                                :price => 0.99, 
                                                                :return_url => 'http://0.0.0.0:3000/confirm',
                                                                                                     :test => true)

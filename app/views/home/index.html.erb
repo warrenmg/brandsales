@@ -28,6 +28,7 @@
   <% end %>  <% end %>
 <div id="orders">	
 
+<%= link_to 'Fetch Orders', :action => "pull_all_orders" %>
  <div id="result">
   <% if @local_orders.blank? %>  
     <em class="note">There are no orders in your store.</em>
