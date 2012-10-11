@@ -1,5 +1,12 @@
 class LoginController < ApplicationController
+   
+skip_filter :ensure_merchant_has_paid
+
+
+puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
+
   def index
+   # skip_filter :ensure_merchant_has_paid
     # Ask user for their #{shop}.myshopify.com address
     
     # If the #{shop}.myshopify.com address is already provided in the URL, just skip to #authenticate
@@ -9,6 +16,7 @@ class LoginController < ApplicationController
   end
 
   def authenticate
+   #skip_filter :ensure_merchant_has_paid
     if params[:shop].present?
       redirect_to ShopifyAPI::Session.new(params[:shop].to_s.strip).create_permission_url
     else
@@ -22,8 +30,11 @@ class LoginController < ApplicationController
   # This token is later combined with the developer's shared secret to form
   # the password used to call API methods.
   def finalize
+    #skip_filter :ensure_merchant_has_paid
     shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t],params)
+ 
     if shopify_session.valid?
+      #ShopifyAPI::Base.activate_session(shopify_session)
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
@@ -41,7 +52,7 @@ class LoginController < ApplicationController
   def logout
     session[:shopify] = nil
     flash[:notice] = "Successfully logged out."
-    
+    #ShopifyAPI::Base.clear_session
     redirect_to :action => 'index'
   end
   

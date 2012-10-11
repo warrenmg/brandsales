@@ -1,5 +1,7 @@
 Brandsales::Application.routes.draw do
   resources :orders
+  match '/charges/confirm'    => 'charges#confirm'
+  match 'confirm'             => 'home#confirm'
   match '/orders/search_orders/'     => 'orders#search_orders'
   match 'welcome'            => 'home#welcome'
 

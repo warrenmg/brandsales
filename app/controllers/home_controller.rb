@@ -6,6 +6,14 @@ class HomeController < ApplicationController
     s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 
   end
   
+  def confirm
+      # the old method of checking for params[:accepted] is deprecated.
+      ShopifyAPI::RecurringApplicationCharge.find(params[:charge_id]).activate
+      puts "CHARGE TO BE SAVED TO LOCAL DB HC"
+      # update local data store
+        redirect_to :action => 'index'
+    end
+  
   def welcome
      
     current_host = "#{request.host}#{':' + request.port.to_s if request.port != 80}"
