@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
-  
-  around_filter :shopify_session, :except => 'welcome'
+  around_filter :shopify_session
+  #around_filter :shopify_session, :except => 'welcome'
+  before_filter :ensure_merchant_has_paid, :except => 'confirm'
   
   def is_a_number?(s)
     s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 

@@ -1,6 +1,6 @@
 class LoginController < ApplicationController
    
-skip_filter :ensure_merchant_has_paid
+#after_filter :ensure_merchant_has_paid, :except => 'confirm'
 
 
 puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
@@ -30,7 +30,6 @@ puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
   # This token is later combined with the developer's shared secret to form
   # the password used to call API methods.
   def finalize
-    #skip_filter :ensure_merchant_has_paid
     shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t],params)
  
     if shopify_session.valid?
@@ -38,13 +37,13 @@ puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
-      ensure_merchant_has_paid
+    # ensure_merchant_has_paid
       
-     # redirect_to return_address
-      #puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-     # puts return_address.inspect
-     # puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-     # session[:return_to] = nil
+     redirect_to return_address
+   puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     puts return_address.inspect
+     puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     session[:return_to] = nil
     else
       flash[:error] = "Could not log in to Shopify store."
       redirect_to :action => 'index'
