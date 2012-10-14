@@ -1,23 +1,4 @@
 <div>
-<!-- 
-<div id="sidebar">
-<h3><%#= @orderstart.to_time.strftime('%d %b %y') %> to <%#= @orderend.to_time.strftime('%d %b %y') %><span class="note"><br /><%#= @orderdiff %> days </span></h3>
-
-  <h3><%#=  number_to_currency( @vend["totalsales"], :unit => "£") %></h3>
-  <h3><%#= (@orderactive.to_f / @orderdiff.to_f).round(1) %> orders per day</h3>
-  <h3><%#= @orders.size %> total orders</h3>
-  <h3><%#= @orderactive %> ok orders</h3>
-  <h3><%#= @vend["ordercancelled"] %> cancelled orders     <span class="note">(<%#= number_to_percentage(@order_cancel_perc) %>)</span> </h3>
-  <h3><%#= @vend["ordercount"] %> items sold <span class="note"><%#= (@vend["ordercount"].to_f / @orderactive.to_f).round(2) %> items per order </span></h3>
-
-  <ul>
-    <li><%= link_to 'Store Admin', 'http://www.shopify.com/developers/api/' %>
-      <span class="note">Click here to back to your store admin area</span>
-    </li>
-    <li><%#= link_to 'Pull Orders', :action => "initial_pull" %>
-    </li>
-  </ul>
-</div> -->
 <% if !@o_years.blank? %>
 <% if @order_year %>
    <select id="war_reg">

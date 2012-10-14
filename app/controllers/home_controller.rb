@@ -1,19 +1,8 @@
 class HomeController < ApplicationController
-  around_filter :shopify_session
-  #around_filter :shopify_session, :except => 'welcome'
-  before_filter :ensure_merchant_has_paid, :except => 'confirm'
-  
+  #skip_filter :ensure_merchant_has_paid
   def is_a_number?(s)
     s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 
   end
-  
-  def confirm
-      # the old method of checking for params[:accepted] is deprecated.
-      ShopifyAPI::RecurringApplicationCharge.find(params[:charge_id]).activate
-      puts "CHARGE TO BE SAVED TO LOCAL DB HC"
-      # update local data store
-        redirect_to :action => 'index'
-    end
   
   def welcome
      
@@ -23,22 +12,10 @@ class HomeController < ApplicationController
   end
   
   def index
-
-   #if params[:enddate].blank? then
-  #       @orderend = Date.today
-  # else
-  #       @orderend = params[:enddate].to_time.strftime('%Y-%m-%d')
-  # end
-   # @orderend = params[:enddate].blank? ?  Date.today : params[:enddate] 
-  # today = Date.today
-  # today.to_s
-  # @orderstart = Date.parse "#{today.year}-01-01" 
-  # @orderend = Date.today
-  # @orderdiff = (@orderend.to_date - @orderstart.to_date).to_i
-  
       #pull_all_orders
       
-      check_orders(Time.now.year)       
+      check_orders(Time.now.year)     
+      
  end
  
  def build_years
@@ -58,11 +35,9 @@ class HomeController < ApplicationController
 
 @lastorderid.each do |topid|
   @shopifysinceid = topid.shopifyorderid
-puts "Last order ID: #{topid.shopifyorderid}"
+  puts "Last order ID: #{topid.shopifyorderid}"
 end
-
     @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
-  
        if @orderscount > 0
          @page = 0
          @noofpages = @orderscount.divmod(250).first
@@ -104,15 +79,13 @@ end
           end
         end 
       end
-         redirect_to :action => 'index'
+      redirect_to :action => 'index'
  end
  
   def initial_pull
 
       @orders = ShopifyAPI::Order.find(:all, :params => {:status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,line_items,cancel_reason", :order => "created_at DESC" })
- 
-    
-    @orders.each do |shop_order| 
+      @orders.each do |shop_order| 
       @order= Order.new
       @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopify_name => "#{shop_order.name}")
      

@@ -1,22 +1,16 @@
 class LoginController < ApplicationController
-   
-#after_filter :ensure_merchant_has_paid, :except => 'confirm'
-
-
-puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
+skip_filter :shopify_session
+skip_filter :ensure_merchant_has_paid
 
   def index
-   # skip_filter :ensure_merchant_has_paid
     # Ask user for their #{shop}.myshopify.com address
-    
     # If the #{shop}.myshopify.com address is already provided in the URL, just skip to #authenticate
     if params[:shop].present?
       redirect_to authenticate_path(:shop => params[:shop])
     end
   end
-
+  
   def authenticate
-   #skip_filter :ensure_merchant_has_paid
     if params[:shop].present?
       redirect_to ShopifyAPI::Session.new(params[:shop].to_s.strip).create_permission_url
     else
@@ -31,15 +25,14 @@ puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
   # the password used to call API methods.
   def finalize
     shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t],params)
- 
+    
     if shopify_session.valid?
-      #ShopifyAPI::Base.activate_session(shopify_session)
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
-    # ensure_merchant_has_paid
+    #ensure_merchant_has_paid
       
-     redirect_to return_address
+   redirect_to return_address
    puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
      puts return_address.inspect
      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
@@ -53,7 +46,6 @@ puts "LOOOGGGGGGINNNNN PAAAAGGGGGEEEE"
   def logout
     session[:shopify] = nil
     flash[:notice] = "Successfully logged out."
-    #ShopifyAPI::Base.clear_session
     redirect_to :action => 'index'
   end
   

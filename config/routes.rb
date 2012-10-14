@@ -1,7 +1,10 @@
 Brandsales::Application.routes.draw do
   resources :orders
-  match '/charges/confirm'    => 'charges#confirm'
-  match 'confirm'             => 'home#confirm'
+  match '/charge/confirm'    => 'charge#confirm', :as => :confirm
+  match 'charge'    => 'charge#index', :as => :charge
+  
+  match 'home'      => 'home#index'
+  
   match '/orders/search_orders/'     => 'orders#search_orders'
   match 'welcome'            => 'home#welcome'
 
@@ -10,7 +13,7 @@ Brandsales::Application.routes.draw do
   match 'login'              => 'login#index',        :as => :login
 
   match 'login/authenticate' => 'login#authenticate', :as => :authenticate
-
+ 
   match 'login/finalize'     => 'login#finalize',     :as => :finalize
 
   match 'login/logout'       => 'login#logout',       :as => :logout

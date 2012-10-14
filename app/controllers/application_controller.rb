@@ -1,20 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   
-  #around_filter :shopify_session
-  #before_filter :ensure_merchant_has_paid, :except => 'confirm'
-  
-
-    # ...
-    def confirm
-       # the old method of checking for params[:accepted] is deprecated.
-       ShopifyAPI::RecurringApplicationCharge.find(params[:charge_id]).activate
-       puts "CHARGE TO BE SAVED TO LOCAL DB APPC"
-       # update local data store
-        redirect_to :action => root_url
-     end
+  prepend_around_filter :shopify_session, :except => 'welcome'
+  before_filter :ensure_merchant_has_paid, :except => 'confirm', :except => 'pull_all_orders'
     
-
     def ensure_merchant_has_paid
         puts "CHECKING FOR CHARGE"
         shopify_session do 
@@ -23,16 +12,15 @@ class ApplicationController < ActionController::Base
              puts "START CHARGE"
              charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
                                                                :price => 0.99, 
-                                                               :return_url => 'http://0.0.0.0:3000/confirm',
+                                                               :return_url => 'http://0.0.0.0:3000/charge/confirm',
                                                                                                     :test => true)
-        redirect_to ShopifyAPI::RecurringApplicationCharge.pending.first.confirmation_url #charge.confirmation_url
+           redirect_to ShopifyAPI::RecurringApplicationCharge.pending.first.confirmation_url #charge.confirmation_url
       end
    end
-      rescue 
+      rescue
+        puts "PROBELM WITH CHARGE" 
         redirect_to login_path
     end
-    
-
  
  def check_order_owner
   order = Order.find(params[:id])
