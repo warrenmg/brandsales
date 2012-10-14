@@ -3,21 +3,19 @@
     <em class="note">There are no orders in your store.</em>
   <% else %>
   
-  <!-------------------------------------------------------------------------------------->
  <table border ="1px solid">
   <!--------HEADER PART OF THE TABLE ---->
   <tr>
     <th>Vendor Name</th>
     	 <% @months.each do |m| %>
-     <td><%= m %> </td>
+     <th><%= m %> </th>
     	  <% end %>
+<th>Total</th>
    </tr>
-    <!--------HEADER PART OF THE TABLE ---->
-    <!--------DATA PART OF THE TABLE ---->    
    <% @m = [1,2,3,4,5,6,7,8,9,10,11,12]%> 
   
    <% @local_vendors.each do |v| %>
-   
+   <% @newbrandtotal = 0 %>
    <tr>
     <th> <%= v.vendor %></th>
      <% @years = {} %>
@@ -30,20 +28,17 @@
   <% @years[v.vendor] ||= {}%>
   <% @years[v.vendor][m] ||= [] %>
   <% @years[v.vendor][m] << number_to_currency(l.totcost, :unit => "£") %>
-     
+  	 <% @newbrandtotal += (l.totcost).to_d  %>
+	 <% @years[v.vendor][13] = @newbrandtotal.to_s %>
      <% end %>
-   
- 
    <% end %>
    
       <% end %>
       <% end %>
-   
-  
+
      <% if !@years.blank? %>   
      <% @years.each do |y| %>
     
-     
      	<% if y[0] == v.vendor %>
 				   
      				<% if !y[1][1].blank? %><td><%= change_to_value(y[1][1].to_s) %></td><%else %><td><%= number_to_currency(0,:unit => "£") %></td><% end %>
@@ -58,7 +53,7 @@
      				<% if !y[1][10].blank? %><td><%=change_to_value(y[1][10].to_s) %></td><%else %><td><%= number_to_currency(0,:unit => "£") %></td><% end %>
      				<% if !y[1][11].blank? %><td><%=change_to_value(y[1][11].to_s) %></td><%else %><td><%= number_to_currency(0,:unit => "£") %></td><% end %>
      				<% if !y[1][12].blank? %><td><%=change_to_value(y[1][12].to_s) %></td><%else %><td><%= number_to_currency(0,:unit => "£") %></td><% end %>
-     		
+     				<% if !y[1][13].blank? %><td><%=number_to_currency(y[1][13],:unit => "£") %></td><%else %><td><%= number_to_currency(0,:unit => "£") %></td><% end %>
      	
      	<% end %>
      	

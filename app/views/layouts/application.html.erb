@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Brand Sales Report Application</title>
+  <title>Brand Sales Report - 78e</title>
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 
 <body>
+	
   <div id="header">
     <h1><%= link_to 'Brand Sales Report', '/' %></h1>
     
@@ -22,8 +23,8 @@
 
   <div id="container" class="clearfix">
     <ul id="tabs">
-      <%= tab :index, {:controller => '/home'}, :label => 'Home' %>
-      <%= tab :orders, {:controller => '/orders'}, :label => 'List Orders' %>
+      <%= tab :index, {:controller => '/home'}, :label => 'Dashboard' %>
+      <%= tab :orders, {:controller => '/orders'}, :label => 'Last 100 Orders' %>
     </ul>
     
     <!-- Flash error & notice-->
@@ -36,5 +37,6 @@
     </div>
     <!-- end div.main -->
   </div>
+
 </body>
 </html>

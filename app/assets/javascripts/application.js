@@ -14,3 +14,12 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require_tree .
+
+
+            function showHidePreloader(show){
+                if(show)
+                    document.getElementById('preloader').style.display='inline';
+                else
+                    document.getElementById('preloader').style.display='none';
+            }
+        

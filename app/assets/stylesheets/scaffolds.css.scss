@@ -12,6 +12,15 @@ p, ol, ul, td {
   line-height: 18px;
 }
 
+#preloader{
+              display:none;
+			  float: right;
+			  margin:0;
+          }
+#preloader img{
+					  margin:-5px 0 0 0;
+		          }
+
 table {
 font-family: verdana, arial, helvetica, sans-serif;
  font-size: 11px;
@@ -21,14 +30,14 @@ border-collapse:collapse;
 }
 table th {
 padding: 7px;
-background-color: #E0F8F7;
+background-color: #ddd;
 border: 1px solid black;
 }
 table td {
 padding: 6px;
 border: 1px solid black;
 }
-table tr:hover { background-color: #E0F8F7; }
+table tr:hover { background-color: #ddd; }
 
 
 pre {

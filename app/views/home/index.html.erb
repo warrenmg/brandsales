@@ -1,24 +1,22 @@
 <div>
 <% if !@o_years.blank? %>
-<% if @order_year %>
+<% if @order_year %><div class="ordernav">
    <select id="war_reg">
                     <% @order_year.each do |w| %>
 	          	        <option value="<%= w %>"><%= w %></option>
     	         <% end %>	           
 	       </select>
-  <% end %>  <% end %>
-<div id="orders">	
+  <% end %>  <% end %> <div class="fetchorders"><a href="/pull_all_orders" onclick="showHidePreloader(true);">Fetch Orders</a></div>
+<div id="preloader"><img src="/images/ajax-loader-1.gif" /></div></div>
 
-<%= link_to 'Fetch Orders', :action => "pull_all_orders" %>
+<div id="orders">	
  <div id="result">
   <% if @local_orders.blank? %>  
-    <em class="note">There are no orders in your store.</em>
+    <em class="note">There are no orders in your store, click "Fetch Orders" to download them now.</em>
   <% else %>
-  
  <table>
   <tr>
     <th>Vendor Name</th>
-    
      <% @months.each do |m| %>
      <th><%= m %> </th>
       <% end %>

@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 0;
   font: 0.8em/1.3em "Lucida Grande", Arial, Arial, sans-serif; 
   background: #ededed;
 }
@@ -11,10 +12,11 @@ h3 { margin-top: 24px; }
 h4 { font-weight: normal; margin-top: 14px; font-size: 125%;  }
 
 #header {
-  background: #2d3337 url('../images/logo.png') 20px 50% no-repeat;
-  padding: 25px 25px 25px 70px;
-  border-top: 5px solid #1f2326;
-  border-bottom: 1px solid #252a2e;
+  background: #2d3337 url('../images/logo.jpg') 0px 50% no-repeat;
+  padding: 0px 25px 0px 80px;
+  height: 60px;
+  border-top: 1px solid #2d3337;
+  border-bottom: 1px solid #2d3337;
 }
 
 #header h1 { color: #fffad5; }
@@ -33,7 +35,7 @@ h4 { font-weight: normal; margin-top: 14px; font-size: 125%;  }
 #login-link a.shop_name:hover { text-decoration: underline; }
 
 #container {
-  width: 90%;
+  width: 94%;
   min-width: 800px;
   margin: 40px auto;
   background: #fff;
@@ -41,7 +43,7 @@ h4 { font-weight: normal; margin-top: 14px; font-size: 125%;  }
   border-bottom: 1px solid #e5e5e5;
 }
 
-#container h1 { margin: 18px 0 27px 0; }
+#container h1 { margin: 18px 0px 27px 20px; }
 
 #main { padding: 18px; }
 
@@ -50,7 +52,7 @@ h4 { font-weight: normal; margin-top: 14px; font-size: 125%;  }
   padding: 0;
   height: 20px;
   position: absolute;
-  top: 123px;
+  top: 77px;
 }
 
 #tabs li {
@@ -127,6 +129,19 @@ code { font-size: 140%; }
 
 .order, .product { width: 55%; }
 .product { margin: 10px; } 
+.fetchorders { 
+	margin: 0px 0px 0px 20px; 
+	display: inline; 
+}
+
+.ordernav { 
+	margin: 0; 
+	display: block; 
+	height: 30px;
+	width: 250px;
+	padding: 10px 0 0 0;
+	border: 0px solid #e5e5e5;
+}
 
 .product img {
   margin: 0 10px 0 0;
@@ -150,6 +165,10 @@ code { font-size: 140%; }
   color: #000;
   font-size: 15px;
   padding: 6px;
+}
+
+#orders  {
+  padding: 15px 0px 0px 0px;
 }
 
 #orders ul {
@@ -231,7 +250,7 @@ code { font-size: 140%; }
 }
 
 .info a { color: #fff; }
-.info a:hover { color: #dcfaff; }
+.info a:hover { color: #ddd; }
 
 .grey {
   background: #eee;
