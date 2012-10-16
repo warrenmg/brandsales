@@ -89,6 +89,7 @@ $('document').ready(function(){
      var syear= $('#war_reg').val(); 
      	
  $.ajax({
+
   url: '/home/select_orders_of_year?year='+syear,
   success: function(data) {
    $('#result').html(data);}
