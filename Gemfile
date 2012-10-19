@@ -21,6 +21,8 @@ end
 
 gem 'jquery-rails'
 
+gem 'htmlentities'
+
 group :production do
   gem 'pg'
 end
