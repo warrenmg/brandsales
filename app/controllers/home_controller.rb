@@ -65,7 +65,7 @@ if session[:shopifyshop].blank?
 end
     ##### End Check shopify store currency format
       
-      pull_all_orders
+      pull_all_orders()
       
       check_orders(Time.now.year)     
       
