@@ -23,6 +23,8 @@ gem 'jquery-rails'
 
 gem 'htmlentities'
 
+gem 'delayed_job_active_record'
+
 group :production do
   gem 'pg'
 end

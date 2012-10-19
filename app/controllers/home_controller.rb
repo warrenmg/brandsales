@@ -65,6 +65,8 @@ if session[:shopifyshop].blank?
 end
     ##### End Check shopify store currency format
       
+      pull_all_orders
+      
       check_orders(Time.now.year)     
       
  end
@@ -172,9 +174,9 @@ end
          session[:shopifyshop][:lastupdate] =  Time.now.strftime("%F %H:%M")
       # Check for any orders updated since last order fetch END
       
-      redirect_to :action => 'index'
+     # redirect_to :action => 'index'
  end
-
+ handle_asynchronously :pull_all_orders
 
   def select_orders_of_year
     if params[:year]
