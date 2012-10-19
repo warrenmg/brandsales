@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'yaml'
+require 'htmlentities'
 YAML::ENGINE.yamler = 'syck'
 
 # Set up gems listed in the Gemfile.

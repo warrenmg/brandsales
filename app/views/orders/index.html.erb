@@ -10,9 +10,14 @@
     <th>No of items</th>
     <th>Price</th>
     <th>Vendor Name</th>
+	<th>Paid Status</th>
+	<th>Shipped Status</th>
+	<th>Gateway</th>
+	<th>Processing Method</th>
+	<th>Cancelled On</th>
     <th colspan="2">Actions</th>
   </tr>
-  
+ 
   
 <% @orders.each do |order| %>
   <tr>
@@ -22,6 +27,12 @@
     <td><%= order.no_of_items %></td>
     <td><%= order.price %></td>
     <td><%= order.vendor_name %></td>
+  	<td><%= order.paid_status %></td>
+  	<td><%= order.shipped_status %></td>
+	<td><%= order.gateway %></td>
+	<td><%= order.processing_method %></td>
+	<td><%= order.cancelled_at %></td>
+
     <td><%= link_to 'Show', order %></td>
     <td><%= link_to 'Delete', order, confirm: 'Are you sure?', method: :delete %></td>
   </tr>

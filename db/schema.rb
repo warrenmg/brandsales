@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121001132303) do
+ActiveRecord::Schema.define(:version => 20121018203341) do
 
   create_table "orders", :force => true do |t|
     t.integer  "shopify_order_id"
@@ -20,9 +20,29 @@ ActiveRecord::Schema.define(:version => 20121001132303) do
     t.integer  "no_of_items"
     t.float    "price"
     t.string   "vendor_name"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.string   "shopify_owner"
+    t.string   "paid_status"
+    t.string   "shipped_status"
+    t.float    "subtotal_price"
+    t.float    "total_tax"
+    t.datetime "cancelled_at"
+    t.string   "gateway"
+    t.string   "processing_method"
+  end
+
+  create_table "shopifystores", :force => true do |t|
+    t.string   "name"
+    t.string   "status"
+    t.datetime "lastorderupdate"
+    t.string   "currency"
+    t.string   "taxesincluded"
+    t.string   "shopifyplan"
+    t.string   "shopify_owner"
+    t.string   "email"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
 end

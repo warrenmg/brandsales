@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
 #around_filter :shopify_session
-before_filter :check_order_owner, :except =>[:index,:search_orders]
+#before_filter :check_order_owner, :except =>[:index,:search_orders]
   # GET /orders
   # GET /orders.json
   def index

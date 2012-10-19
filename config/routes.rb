@@ -1,5 +1,7 @@
 Brandsales::Application.routes.draw do
   resources :orders
+  resources :shopifystores
+  
   match '/charge/confirm'    => 'charge#confirm', :as => :confirm
   match 'charge'    => 'charge#index', :as => :charge
   

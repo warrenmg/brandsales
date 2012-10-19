@@ -30,10 +30,8 @@ skip_filter :ensure_merchant_has_paid
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
-    #ensure_merchant_has_paid
-      
    redirect_to return_address
-   puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+     puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
      puts return_address.inspect
      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
      session[:return_to] = nil
@@ -45,6 +43,7 @@ skip_filter :ensure_merchant_has_paid
   
   def logout
     session[:shopify] = nil
+    session[:shopifyshop] =  nil
     flash[:notice] = "Successfully logged out."
     redirect_to :action => 'index'
   end
