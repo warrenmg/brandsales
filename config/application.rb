@@ -13,12 +13,12 @@ module Brandsales
   class Application < Rails::Application
     
     # Shopify API connection credentials DEV:
-    #config.shopify.api_key = "003158606addc8fa4d013901997838fe"
-   # config.shopify.secret = "81837a1229558855fdb5b429fdd7489c"
+    config.shopify.api_key = "003158606addc8fa4d013901997838fe"
+   config.shopify.secret = "81837a1229558855fdb5b429fdd7489c"
     
     # Shopify API connection credentials STAGING:
-    config.shopify.api_key = "4b1dd2e4d1fff1fc34aee679e3964b62"
-    config.shopify.secret = "1f2f8b7af1477153a4289107f9830a35"
+    #config.shopify.api_key = "4b1dd2e4d1fff1fc34aee679e3964b62"
+    #config.shopify.secret = "1f2f8b7af1477153a4289107f9830a35"
     
     
     # Settings in config/environments/* take precedence over those specified here.
