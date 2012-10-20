@@ -12,7 +12,6 @@ end
 module Brandsales
   class Application < Rails::Application
     
-<<<<<<< HEAD
     # Shopify API connection credentials DEV:
     config.shopify.api_key = "003158606addc8fa4d013901997838fe"
    config.shopify.secret = "81837a1229558855fdb5b429fdd7489c"
@@ -21,11 +20,6 @@ module Brandsales
     #config.shopify.api_key = "4b1dd2e4d1fff1fc34aee679e3964b62"
     #config.shopify.secret = "1f2f8b7af1477153a4289107f9830a35"
     
-=======
-    # Shopify API connection credentials:
-    config.shopify.api_key = "4b1dd2e4d1fff1fc34aee679e3964b62"
-    config.shopify.secret = "1f2f8b7af1477153a4289107f9830a35"
->>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
     
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

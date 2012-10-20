@@ -1,5 +1,4 @@
 Brandsales::Application.routes.draw do
-<<<<<<< HEAD
   resources :orders
   resources :shopifystores
   
@@ -9,8 +8,6 @@ Brandsales::Application.routes.draw do
   match 'home'      => 'home#index'
   
   match '/orders/search_orders/'     => 'orders#search_orders'
-=======
->>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
   match 'welcome'            => 'home#welcome'
 
   match 'design'             => 'home#design'
@@ -18,7 +15,6 @@ Brandsales::Application.routes.draw do
   match 'login'              => 'login#index',        :as => :login
 
   match 'login/authenticate' => 'login#authenticate', :as => :authenticate
-<<<<<<< HEAD
  
   match 'login/finalize'     => 'login#finalize',     :as => :finalize
 
@@ -27,13 +23,6 @@ Brandsales::Application.routes.draw do
   match 'pull_all_orders'    => 'home#pull_all_orders', :as => 'pull_all_orders'
   match 'orders'			     => 'orders#index'
   match '/home/select_orders_of_year' => "home#select_orders_of_year"
-=======
-
-  match 'login/finalize'     => 'login#finalize',     :as => :finalize
-
-  match 'login/logout'       => 'login#logout',       :as => :logout
-
->>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
   root :to                   => 'home#index'
 
   # The priority is based upon order of creation:
