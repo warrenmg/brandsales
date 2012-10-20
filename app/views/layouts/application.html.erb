@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
+<<<<<<< HEAD
   <title>Brand Sales Report - 78e</title>
+=======
+  <title>Brand Sales Report Application</title>
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 
 <body>
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
   <div id="header">
     <h1><%= link_to 'Brand Sales Report', '/' %></h1>
     
     <p id="login-link">
       <% if current_shop %>
           <span class="note">current shop</span> <%= link_to current_shop.url, "https://#{current_shop.url}", :class => 'shop_name' %> <span class="note">|</span>
+<<<<<<< HEAD
           <%#= link_to 'List Orders', orders_path %><span class="note">|</span>
+=======
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
           <%= link_to 'logout', logout_path %>
       <% end %>
     </p>
@@ -23,8 +33,13 @@
 
   <div id="container" class="clearfix">
     <ul id="tabs">
+<<<<<<< HEAD
       <%= tab :index, {:controller => '/home'}, :label => 'Dashboard' %>
       <%= tab :orders, {:controller => '/orders'}, :label => 'Last 100 Orders' %>
+=======
+      <%= tab :index, {:controller => '/home'}, :label => 'Home' %>
+      <%= tab :design, {:controller => '/home', :action => 'design'}, :label => 'Design Help' %>
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
     </ul>
     
     <!-- Flash error & notice-->
@@ -37,6 +52,9 @@
     </div>
     <!-- end div.main -->
   </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
 </body>
 </html>

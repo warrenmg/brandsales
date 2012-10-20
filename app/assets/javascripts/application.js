@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+<<<<<<< HEAD
 //= require_tree .
 
 
@@ -23,3 +24,7 @@
                     document.getElementById('preloader').style.display='none';
             }
         
+=======
+//= require jquery.ui.datepicker
+//= require_tree .
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde

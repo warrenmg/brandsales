@@ -5,6 +5,10 @@ gem 'rails', '3.2.1'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+<<<<<<< HEAD
+=======
+gem 'sqlite3'
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
 
 
 # Gems used only for assets and not required
@@ -21,6 +25,7 @@ end
 
 gem 'jquery-rails'
 
+<<<<<<< HEAD
 gem 'htmlentities'
 
 gem 'delayed_job_active_record'
@@ -32,6 +37,8 @@ group :development, :test do
  
   gem 'pg'
 end
+=======
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -46,11 +53,18 @@ end
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+<<<<<<< HEAD
 gem "shopify_app", "~> 2.1.2"
 gem 'shopify_api', '~>2.3.0'
 
 gem 'jquery_datepicker'
 gem 'therubyracer'
+=======
+gem 'shopify_app'
+
+gem 'jquery_datepicker'
+
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
 group :assets do
   gem 'jquery-ui-rails'
 end

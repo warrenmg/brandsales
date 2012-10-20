@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+<<<<<<< HEAD
   
   prepend_around_filter :shopify_session
   before_filter :ensure_merchant_has_paid, :except => 'confirm', :except => 'pull_all_orders', :except => 'login'
@@ -55,4 +56,6 @@ class ApplicationController < ActionController::Base
   redirect_to orders_url
  end
  
+=======
+>>>>>>> 08b4468b937244d1515642d031f20333c00e2fde
 end
