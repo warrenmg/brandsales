@@ -64,26 +64,16 @@ if session[:shopifyshop].blank?
     end 
 end
     ##### End Check shopify store currency format
-      dcd = Time.now.strftime("%F %H:%M")
+      #dcd = Time.now.strftime("%F %H:%M")
       #session[:shopifyshop][:lastupdate]
       
       #delayedorderfetch.pull_all_orders_back(dcd,session[:shopify].url)
       dss = Delayedorderfetch.new
-     @dsdsd = dss.pull_all_orders_back(dcd,session[:shopify].url,session[:shopify])
-     
-     #delayed_pull_all_orders()
+      @dsdsd = dss.pull_all_orders_back(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
       
       check_orders(Time.now.year)     
       
  end
- 
- def delayed_pull_all_orders()
-   
-       puts "HERE WE GOOOOOOOOOOOOOOOOOOOOOO"
-
-      return true
-   end
-   handle_asynchronously :delayed_pull_all_orders
  
  def build_years
      #@o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
