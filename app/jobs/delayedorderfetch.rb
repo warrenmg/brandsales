@@ -1,8 +1,8 @@
 class Delayedorderfetch 
 
   def pull_all_orders_back(lastorderupdate,shopifyurl,shopify_session)
-    
-    puts "Delayed Fetch STARTED"
+    puts "Is session valid? #{shopify_session.valid?}"
+    ActiveResource::Base.site = shopify_session.site
 
       @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{shopifyurl}'")
 
@@ -34,7 +34,6 @@ class Delayedorderfetch
 
           if shop_order.financial_status = "authorized" or shop_order.financial_status = "paid"  then 
 
-          #	 if shop_order.cancel_reason.nil? 
               shop_order.line_items.each do |line_item| 
                 @order= Order.new
                 @order.shopify_order_id = shop_order.id
@@ -53,48 +52,44 @@ class Delayedorderfetch
                 @order.processing_method = shop_order.processing_method
                 @order.save
                end 
-          	# else 
-          	   # Cancelled Order
-           # end 
+
              end 
              end
            end 
          end
          # Check for any orders UPDATED since last order fetch START
           #puts  session[:shopifyshop][:lastupdate]
-         # @orders =  nil
-        #  @orderscount = ShopifyAPI::Order.count(:updated_at_min => lastorderupdate)
-        #  puts @orderscount
-        #  if @orderscount > 0
-        #    @page = 1
-        #    @noofpages = (@orderscount.div(250) + 1)
-        #    puts "Total updated Pages: #{@noofpages}" 
-        #    puts "Order updated Count: #{@orderscount}" 
-        #   while @page <= @noofpages
-        #       puts "Current updated Page #{@page }"
-        #      @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :updated_at_min => lastorderupdate, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :updated_at_min => lastorderupdate, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" })
-        #     @page += 1
-        #    end
-        #  end
+           @orders =  nil
+           @orderscount = ShopifyAPI::Order.count(:updated_at_min => lastorderupdate)
+           puts @orderscount
+           if @orderscount > 0
+             @page = 1
+             @noofpages = (@orderscount.div(250) + 1)
+             puts "Total updated Pages: #{@noofpages}" 
+             puts "Order updated Count: #{@orderscount}" 
+            while @page <= @noofpages
+                puts "Current updated Page #{@page }"
+               @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :updated_at_min => lastorderupdate, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :updated_at_min => lastorderupdate, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" })
+              @page += 1
+             end
+           end
 
-        #   if @orders 
+            if @orders 
 
-        #   @orders.each do |shop_order|
+            @orders.each do |shop_order|
 
            #  puts shop_order.inspect
-         #  Order.update_all({:shipped_status => shop_order.fulfillment_status, :paid_status => shop_order.financial_status, :cancelled_at => shop_order.cancelled_at}, ["shopify_order_id = ?", shop_order.id])
-        #   end
-        # end
+            Order.update_all({:shipped_status => shop_order.fulfillment_status, :paid_status => shop_order.financial_status, :cancelled_at => shop_order.cancelled_at}, ["shopify_order_id = ?", shop_order.id])
+            end
+          end
            #puts  session[:shopifyshop][:lastupdate]
-         #  @existing_store = nil
-        #   @existing_store = Shopifystores.where(:shopify_owner => shopifyurl).first
-        #   puts  @existing_store.inspect
-        #   @existing_store.lastorderupdate = Time.now.strftime("%F %H:%M")
-        #   @existing_store.save
+            @existing_store = nil
+            @existing_store = Shopifystores.where(:shopify_owner => shopifyurl).first
+            puts  @existing_store.inspect
+            @existing_store.lastorderupdate = Time.now.strftime("%F %H:%M")
+            @existing_store.save
             #session[:shopifyshop][:lastupdate] =  Time.now.strftime("%F %H:%M")
          # Check for any orders updated since last order fetch END
-         #return true
-        # redirect_to :action => 'index'
     end
     handle_asynchronously :pull_all_orders_back
   end
