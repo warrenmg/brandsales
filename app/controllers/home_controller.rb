@@ -64,12 +64,26 @@ if session[:shopifyshop].blank?
     end 
 end
     ##### End Check shopify store currency format
+      dcd = Time.now.strftime("%F %H:%M")
+      #session[:shopifyshop][:lastupdate]
       
-      pull_all_orders_back(session[:shopifyshop][:lastupdate],session[:shopify].url)
+      #delayedorderfetch.pull_all_orders_back(dcd,session[:shopify].url)
+      dss = Delayedorderfetch.new
+     @dsdsd = dss.pull_all_orders_back(dcd,session[:shopify].url)
+     
+     #delayed_pull_all_orders()
       
       check_orders(Time.now.year)     
       
  end
+ 
+ def delayed_pull_all_orders()
+   
+       puts "HERE WE GOOOOOOOOOOOOOOOOOOOOOO"
+
+      return true
+   end
+   handle_asynchronously :delayed_pull_all_orders
  
  def build_years
      #@o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
@@ -81,6 +95,7 @@ end
      end
      end
  end
+ 
  
  def pull_all_orders
    
@@ -178,101 +193,7 @@ end
  end
  #handle_asynchronously :pull_all_orders
  
- def pull_all_orders_back(lastorderupdate,shopifyurl)
-
-    @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{current_shop.url}'")
-
-   @lastorderid.each do |topid|
-     @shopifysinceid = topid.shopifyorderid
-     puts "Last order ID: #{topid.shopifyorderid}"
-   end
-        @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
-        if @orderscount > 0
-          @page = 1
-          #@noofpages = @orderscount.divmod(250).first
-          @noofpages = (@orderscount.div(250) + 1)
-          puts "Total Pages: #{@noofpages}" 
-          puts "Order Count: #{@orderscount}" 
-         while @page <= @noofpages
-             puts "Current Page #{@page }"
-            @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :since_id => @shopifysinceid, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :since_id => @shopifysinceid, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" })
-           @page += 1
-          end
-        end   
-
-        if @orders 
-
-        @orders.each do |shop_order| 
-
-        @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopify_name => shop_order.name)
-
-        if @existing_order.blank?
-
-        if shop_order.financial_status = "authorized" or shop_order.financial_status = "paid"  then 
-
-        #	 if shop_order.cancel_reason.nil? 
-            shop_order.line_items.each do |line_item| 
-              @order= Order.new
-              @order.shopify_order_id = shop_order.id
-              @order.shopify_name = shop_order.name
-              @order.order_date = shop_order.created_at
-              @order.no_of_items =line_item.quantity
-              @order.price = line_item.price
-              @order.vendor_name = line_item.vendor
-              @order.shopify_owner = current_shop.url
-              @order.shipped_status = line_item.fulfillment_status
-              @order.paid_status = shop_order.financial_status
-              @order.subtotal_price = shop_order.subtotal_price
-              @order.total_tax = shop_order.total_tax
-              @order.cancelled_at = shop_order.cancelled_at
-              @order.gateway = shop_order.gateway
-              @order.processing_method = shop_order.processing_method
-              @order.save
-             end 
-        	# else 
-        	   # Cancelled Order
-         # end 
-           end 
-           end
-         end 
-       end
-       # Check for any orders UPDATED since last order fetch START
-        #puts  session[:shopifyshop][:lastupdate]
-        @orders =  nil
-        @orderscount = ShopifyAPI::Order.count(:updated_at_min => lastorderupdate)
-        puts @orderscount
-        if @orderscount > 0
-          @page = 1
-          @noofpages = (@orderscount.div(250) + 1)
-          puts "Total updated Pages: #{@noofpages}" 
-          puts "Order updated Count: #{@orderscount}" 
-         while @page <= @noofpages
-             puts "Current updated Page #{@page }"
-            @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :updated_at_min => lastorderupdate, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :updated_at_min => lastorderupdate, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" })
-           @page += 1
-          end
-        end
-
-         if @orders 
-
-         @orders.each do |shop_order|
-
-         #  puts shop_order.inspect
-         Order.update_all({:shipped_status => shop_order.fulfillment_status, :paid_status => shop_order.financial_status, :cancelled_at => shop_order.cancelled_at}, ["shopify_order_id = ?", shop_order.id])
-         end
-       end
-         #puts  session[:shopifyshop][:lastupdate]
-         @existing_store = nil
-         @existing_store = Shopifystores.where(:shopify_owner => shopifyurl).first
-         puts  @existing_store.inspect
-         @existing_store.lastorderupdate = Time.now.strftime("%F %H:%M")
-         @existing_store.save
-          #session[:shopifyshop][:lastupdate] =  Time.now.strftime("%F %H:%M")
-       # Check for any orders updated since last order fetch END
-       #return true
-      # redirect_to :action => 'index'
-  end
-  #handle_asynchronously :pull_all_orders
+ 
 
   def select_orders_of_year
     if params[:year]
@@ -283,7 +204,7 @@ end
     end
   end
 
-private
+#private
 
 def check_orders(yr)
       @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopify_owner= '#{current_shop.url}'")
