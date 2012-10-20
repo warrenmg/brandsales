@@ -30,6 +30,7 @@ skip_filter :ensure_merchant_has_paid
       session[:shopify] = shopify_session
       flash[:notice] = "Logged in to shopify store."
       
+      puts shopify_session
    redirect_to return_address
      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
      puts return_address.inspect

@@ -69,7 +69,7 @@ end
       
       #delayedorderfetch.pull_all_orders_back(dcd,session[:shopify].url)
       dss = Delayedorderfetch.new
-     @dsdsd = dss.pull_all_orders_back(dcd,session[:shopify].url)
+     @dsdsd = dss.pull_all_orders_back(dcd,session[:shopify].url,session[:shopify])
      
      #delayed_pull_all_orders()
       

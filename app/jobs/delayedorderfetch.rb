@@ -1,6 +1,6 @@
 class Delayedorderfetch 
 
-  def pull_all_orders_back(lastorderupdate,shopifyurl)
+  def pull_all_orders_back(lastorderupdate,shopifyurl,shopify_session)
     
     puts "Delayed Fetch STARTED"
 
