@@ -6,16 +6,22 @@
 	          	        <option value="<%= w %>"><%= w %></option>
     	         <% end %>	           
 	       </select>
-  <% end %>  <% end %> <div class="fetchorders"><a href="/pull_all_orders" onclick="showHidePreloader(true);">Fetch Orders</a></div>
+  <% end %>  <% end %> 
 <div id="preloader"><img src="/images/ajax-loader-1.gif" /></div></div>
 
 <div id="orders">	
  <div id="result">
-	
-  <% if @local_orders.blank? %>  
-    <em class="note">We have none of your orders yet, click "Fetch Orders" to download them now. <br />
-	<strong>Please be patient</strong>, this first time it could take quite a few minutes to download them all. After this initial download, it will be super dooper quick.</em>
+  <% if @local_orders.blank? %> 
+<script type="text/javascript">
+showHidePreloader(true); 
+</script>
+    <em class="note">We are fetching all yours orders now. <br />
+	<strong>Please be patient</strong>, this first time it could take quite a few minutes...</em>
   <% else %>
+<script type="text/javascript">
+	showHidePreloader(true); 
+</script>
+<div class="fetchorders"><a href="/pull_all_orders" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div>
 <% @localcurrency = session[:shopifyshop][:currency] %>
  <table>
   <tr>
@@ -84,6 +90,9 @@
   </div>
 </div>
 </div>
+<%#=@job_id.inspect %>
+<%#=@job_id.id %>
+
 
 <script type="text/javascript">
 $('document').ready(function(){
@@ -92,7 +101,7 @@ $('document').ready(function(){
      var syear= $('#war_reg').val(); 
      	
  $.ajax({
-
+	
   url: '/home/select_orders_of_year?year='+syear,
   success: function(data) {
    $('#result').html(data);}
@@ -100,5 +109,24 @@ $('document').ready(function(){
    });
 
 });
+//var alertTimerId = 0;
 
+setTimeout("checkonjob()",5000);
+
+
+function checkonjob() {
+	$.get("/home/checkjob",{job_id: <%=@job_id.id %>}, function(data){
+	//alert("Data Loaded: " + data);
+	if (data == 'WORKING'){
+		setTimeout("checkonjob()",5000);
+	//	alert("Data Loaded: " + data);
+	}
+	else {
+		showHidePreloader(false); 
+		//clearTimeout(alertTimerId);
+	}
+	});	
+	
+	
+}
 </script>

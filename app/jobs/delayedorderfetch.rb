@@ -1,6 +1,6 @@
 class Delayedorderfetch 
 
-  def pull_all_orders_back(lastorderupdate,shopifyurl,shopify_session)
+  def perform(lastorderupdate,shopifyurl,shopify_session)
     puts "Is session valid? #{shopify_session.valid?}"
     ActiveResource::Base.site = shopify_session.site
 
@@ -75,7 +75,6 @@ class Delayedorderfetch
            end
 
             if @orders 
-
             @orders.each do |shop_order|
 
            #  puts shop_order.inspect
@@ -85,11 +84,16 @@ class Delayedorderfetch
            #puts  session[:shopifyshop][:lastupdate]
             @existing_store = nil
             @existing_store = Shopifystores.where(:shopify_owner => shopifyurl).first
-            puts  @existing_store.inspect
+           # puts  @existing_store.inspect
             @existing_store.lastorderupdate = Time.now.strftime("%F %H:%M")
             @existing_store.save
             #session[:shopifyshop][:lastupdate] =  Time.now.strftime("%F %H:%M")
          # Check for any orders updated since last order fetch END
     end
-    handle_asynchronously :pull_all_orders_back
+  #  handle_asynchronously :pull_all_orders_back
+  
+  def after(job)
+    
+    puts "DID SOMETHING"
+  end
   end

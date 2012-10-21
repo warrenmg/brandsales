@@ -5,6 +5,24 @@ class HomeController < ApplicationController
     s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 
   end
   
+  def checkjob
+       @job = Delayed::Job.find_by_id(params[:job_id])
+       puts "JOB ID: #{params[:job_id]}"
+       puts "LOOKING INTO JOB: #{@job.inspect}"
+       if @job.nil?
+         # The job has completed and is no longer in the database.
+         render :text => "OK"
+       else
+         if @job.last_error.nil?
+           # The job is still in the queue and has not been run.
+           render :text => "WORKING"
+         else
+           # The job has encountered an error.
+           render :text => "ERROR"
+         end
+       end
+   end
+   
   def welcome
      
     current_host = "#{request.host}#{':' + request.port.to_s if request.port != 80}"
@@ -68,8 +86,8 @@ end
       #session[:shopifyshop][:lastupdate]
       
       #delayedorderfetch.pull_all_orders_back(dcd,session[:shopify].url)
-      dss = Delayedorderfetch.new
-      @dsdsd = dss.pull_all_orders_back(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
+      fetchorders = Delayedorderfetch.new
+      @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
       
       check_orders(Time.now.year)     
       

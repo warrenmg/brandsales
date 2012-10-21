@@ -8,6 +8,8 @@ Brandsales::Application.routes.draw do
   match 'home'      => 'home#index'
   
   match '/orders/search_orders/'     => 'orders#search_orders'
+  match '/home/checkjob/'     => 'home#checkjob'
+  
   match 'welcome'            => 'home#welcome'
 
   match 'design'             => 'home#design'
