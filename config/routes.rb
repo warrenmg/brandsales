@@ -23,6 +23,7 @@ Brandsales::Application.routes.draw do
   match 'login/logout'       => 'login#logout',       :as => :logout
   match 'initial_pull'       => 'home#initial_pull', :as => 'initial_pull'
   match 'pull_all_orders'    => 'home#pull_all_orders', :as => 'pull_all_orders'
+  match 'delayedjoborderfetch'    => 'home#delayedjoborderfetch', :as => 'delayedjoborderfetch'
   match 'orders'			     => 'orders#index'
   match '/home/select_orders_of_year' => "home#select_orders_of_year"
   root :to                   => 'home#index'

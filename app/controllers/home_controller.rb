@@ -7,8 +7,8 @@ class HomeController < ApplicationController
   
   def checkjob
        @job = Delayed::Job.find_by_id(params[:job_id])
-       puts "JOB ID: #{params[:job_id]}"
-       puts "LOOKING INTO JOB: #{@job.inspect}"
+      # puts "JOB ID: #{params[:job_id]}"
+      # puts "LOOKING INTO JOB: #{@job.inspect}"
        if @job.nil?
          # The job has completed and is no longer in the database.
          render :text => "OK"
@@ -31,22 +31,21 @@ class HomeController < ApplicationController
   end
   
   def index
-    
     #puts session[:shopifyshop].inspect
 
     ###### Check shopify store currency format
 if session[:shopifyshop].blank?
     @existing_store = Shopifystores.where(:shopify_owner => session[:shopify].url).first
-    puts @existing_store.inspect
+    #puts @existing_store.inspect
       
     if @existing_store.blank?
-      puts "NOT IN DB - ADDING STORE TO DB"
+      #puts "NOT IN DB - ADDING STORE TO DB"
       @mystore = ShopifyAPI::Shop.current
-       puts "NOT IN DB - ADDING STORE TO DB2"
-         puts @mystore.inspect
-         puts @mystore.money_format.chomp("{{amount}}").html_safe
+       #puts "NOT IN DB - ADDING STORE TO DB2"
+         #puts @mystore.inspect
+         #puts @mystore.money_format.chomp("{{amount}}").html_safe
          coder = HTMLEntities.new
-         puts coder.decode(@mystore.money_format.chomp("{{amount}}")) 
+         #puts coder.decode(@mystore.money_format.chomp("{{amount}}")) 
 
     @shopifystore = Shopifystores.new
     @shopifystore.currency = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
@@ -67,8 +66,8 @@ if session[:shopifyshop].blank?
     session[:shopifyshop][:lastupdate] = Time.now.strftime("%F %H:%M")
 
     else
-    puts "NOT ADDING STORE TO DB"
-    puts @existing_store.inspect
+    #puts "NOT ADDING STORE TO DB"
+    #puts @existing_store.inspect
     session[:shopifyshop] = nil
     session[:shopifyshop] ||= {}	
     session[:shopifyshop][:currency] = @existing_store.currency
@@ -80,17 +79,24 @@ if session[:shopifyshop].blank?
       session[:shopifyshop][:lastupdate] = @existing_store.lastorderupdate
     end
     end 
+    delayedjoborderfetchstart
 end
     ##### End Check shopify store currency format
-      #dcd = Time.now.strftime("%F %H:%M")
-      #session[:shopifyshop][:lastupdate]
-      
-      #delayedorderfetch.pull_all_orders_back(dcd,session[:shopify].url)
-      fetchorders = Delayedorderfetch.new
-      @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
-      
+   # if @existing_store.blank?
+    #  delayedjoborderfetchstart
+    #end
       check_orders(Time.now.year)     
-      
+ end
+ 
+ def delayedjoborderfetch
+    fetchorders = Delayedorderfetch.new
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
+     redirect_to :action => 'index'
+ end
+ 
+ def delayedjoborderfetchstart
+    fetchorders = Delayedorderfetch.new
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
  end
  
  def build_years
@@ -200,7 +206,6 @@ end
      redirect_to :action => 'index'
  end
  #handle_asynchronously :pull_all_orders
- 
  
 
   def select_orders_of_year

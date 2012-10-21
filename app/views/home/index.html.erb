@@ -13,15 +13,17 @@
  <div id="result">
   <% if @local_orders.blank? %> 
 <script type="text/javascript">
-showHidePreloader(true); 
+//showHidePreloader(true); 
 </script>
     <em class="note">We are fetching all yours orders now. <br />
 	<strong>Please be patient</strong>, this first time it could take quite a few minutes...</em>
+	
   <% else %>
 <script type="text/javascript">
-	showHidePreloader(true); 
+//	showHidePreloader(false); 
 </script>
-<div class="fetchorders"><a href="/pull_all_orders" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div>
+
+<div class="fetchorders"><a href="/delayedjoborderfetch" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div>
 <% @localcurrency = session[:shopifyshop][:currency] %>
  <table>
   <tr>
@@ -31,34 +33,27 @@ showHidePreloader(true);
       <% end %>
 		<th>Total</th>
       </tr>
-    
    <% @m = [1,2,3,4,5,6,7,8,9,10,11,12]%> 
    <% @v_size = @local_vendors.size %>
    <% @local_vendors.each do |v| %>
    <% @newbrandtotal = 0 %>
   <tr>
   <th> <%= v.vendor %></th>
-   
    <% @years = {} %>
    <% @local_orders.each do |l| %>
-   
    <% if l.vendor_name == v.vendor %>
    
    <% @m.each do |m| %>
-     
      <% if l.month_list == m.to_s %>
-       
      <% @years[v.vendor] ||= {}%>
      <% @years[v.vendor][m] ||= [] %>
      <% @years[v.vendor][m] << number_to_currency(l.totcost, :unit => @localcurrency) %>
 	 <% @newbrandtotal += (l.totcost).to_d  %>
-	 <% @years[v.vendor][13] = @newbrandtotal.to_s
-		
-		%>
+	 <% @years[v.vendor][13] = @newbrandtotal.to_s %>
      <% end %>
-     <% end %>
-     <% end %>
-     <% end %>
+    <% end %>
+    <% end %>
+    <% end %>
   
      <% if !@years.blank? %> 
      <% @years.each do |y| %>
@@ -82,7 +77,6 @@ showHidePreloader(true);
     <% else %>
         	<td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td>
     <% end %>
-
 </tr> 
      <% end %>
   </table>
@@ -90,9 +84,6 @@ showHidePreloader(true);
   </div>
 </div>
 </div>
-<%#=@job_id.inspect %>
-<%#=@job_id.id %>
-
 
 <script type="text/javascript">
 $('document').ready(function(){
@@ -110,9 +101,9 @@ $('document').ready(function(){
 
 });
 //var alertTimerId = 0;
-
-setTimeout("checkonjob()",5000);
-
+<% unless @job_id.blank? %>
+showHidePreloader(true);
+setTimeout("checkonjob()",3000);
 
 function checkonjob() {
 	$.get("/home/checkjob",{job_id: <%=@job_id.id %>}, function(data){
@@ -121,12 +112,16 @@ function checkonjob() {
 		setTimeout("checkonjob()",5000);
 	//	alert("Data Loaded: " + data);
 	}
+	else if (data == 'ERROR'){
+		alert("Sorry there was an error");
+	}
 	else {
 		showHidePreloader(false); 
+		window.location.replace("/home");
 		//clearTimeout(alertTimerId);
 	}
 	});	
 	
 	
-}
+}<% end %>
 </script>
