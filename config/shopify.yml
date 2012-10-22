@@ -1,10 +1,10 @@
 staging:
     # DEV
-  api_key: 003158606addc8fa4d013901997838fe
- secret: 81837a1229558855fdb5b429fdd7489c
+  #api_key: 003158606addc8fa4d013901997838fe
+  #secret: 81837a1229558855fdb5b429fdd7489c
   
   #STAGING
-  #api_key: 7c8eda7e5f77a3b273d35e507e4383b7
-  #secret: b86eb4dfd9ae98d5f2e03dbef6f23284
+  api_key: 7c8eda7e5f77a3b273d35e507e4383b7
+  secret: b86eb4dfd9ae98d5f2e03dbef6f23284
   
 
