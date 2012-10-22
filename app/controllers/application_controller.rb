@@ -18,9 +18,9 @@ class ApplicationController < ActionController::Base
           unless ShopifyAPI::RecurringApplicationCharge.current
              
           #   puts "START CHARGE"
-             charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
+             charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic Plan", 
                                                                :price => 3.0, 
-                                                               :return_url => 'http://0.0.0.0:3000/charge/confirm',
+                                                               :return_url => 'http://brandsales.78e.co.uk/charge/confirm',
                                                                :test => true)
            redirect_to ShopifyAPI::RecurringApplicationCharge.pending.first.confirmation_url #charge.confirmation_url
           else
@@ -35,8 +35,6 @@ class ApplicationController < ActionController::Base
        # puts "PROBELM WITH CHARGE" 
       #  redirect_to login_path
     end
-    
-    # ,:test => true
  
  def check_order_owner
   order = Order.find(params[:id])
