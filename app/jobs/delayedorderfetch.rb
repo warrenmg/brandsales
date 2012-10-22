@@ -8,7 +8,7 @@ class Delayedorderfetch
 
      @lastorderid.each do |topid|
        @shopifysinceid = topid.shopifyorderid
-       # puts "Last order ID: #{topid.shopifyorderid}"
+        #puts "Last order ID: #{topid.shopifyorderid}"
      end
           @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
           if @orderscount > 0
