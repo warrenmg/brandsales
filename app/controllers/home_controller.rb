@@ -33,58 +33,50 @@ class HomeController < ApplicationController
   def index
     #puts session[:shopifyshop].inspect
 
-    ###### Check shopify store currency format
-if session[:shopifyshop].blank?
+###### Check shopify store properties
+if session[:shopifyshop][:name].blank?
     @existing_store = Shopifystores.where(:shopify_owner => session[:shopify].url).first
     #puts @existing_store.inspect
       
     if @existing_store.blank?
-      #puts "NOT IN DB - ADDING STORE TO DB"
-      @mystore = ShopifyAPI::Shop.current
-       #puts "NOT IN DB - ADDING STORE TO DB2"
-         #puts @mystore.inspect
-         #puts @mystore.money_format.chomp("{{amount}}").html_safe
+         @mystore = ShopifyAPI::Shop.current
          coder = HTMLEntities.new
-         #puts coder.decode(@mystore.money_format.chomp("{{amount}}")) 
 
-    @shopifystore = Shopifystores.new
-    @shopifystore.currency = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
-    @shopifystore.shopify_owner = @mystore.myshopify_domain  
-    @shopifystore.name = @mystore.name
-    @shopifystore.taxesincluded = @mystore.taxes_included
-    @shopifystore.shopifyplan = @mystore.plan_name
-    @shopifystore.email = @mystore.email
-    d = Time.now.strftime("%F %H:%M")
-    @shopifystore.lastorderupdate = d
-    @shopifystore.save
+         @shopifystore = Shopifystores.new
+         @shopifystore.currency = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
+         @shopifystore.shopify_owner = @mystore.myshopify_domain  
+         @shopifystore.name = @mystore.name
+         @shopifystore.taxesincluded = @mystore.taxes_included
+         @shopifystore.shopifyplan = @mystore.plan_name
+         @shopifystore.email = @mystore.email
+         d = Time.now.strftime("%F %H:%M")
+         @shopifystore.lastorderupdate = d
+         @shopifystore.save
     
-    session[:shopifyshop] = nil
-    session[:shopifyshop] ||= {}
-    session[:shopifyshop][:currency] = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
-    session[:shopifyshop][:name] = @mystore.name
-    session[:shopifyshop][:charged] = false
-    session[:shopifyshop][:lastupdate] = Time.now.strftime("%F %H:%M")
+         session[:shopifyshop] = nil
+         session[:shopifyshop] ||= {}
+         session[:shopifyshop][:currency] = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
+         session[:shopifyshop][:name] = @mystore.name
+         session[:shopifyshop][:charged] = false
+         session[:shopifyshop][:lastupdate] = Time.now.strftime("%F %H:%M")
 
     else
-    #puts "NOT ADDING STORE TO DB"
-    #puts @existing_store.inspect
-    session[:shopifyshop] = nil
-    session[:shopifyshop] ||= {}	
-    session[:shopifyshop][:currency] = @existing_store.currency
-    session[:shopifyshop][:name] = @existing_store.name
-    session[:shopifyshop][:charged] = false
-    if @existing_store.lastorderupdate.blank?
-       session[:shopifyshop][:lastupdate] = Datetime.now.strftime("%F %H:%M")
-    else
-      session[:shopifyshop][:lastupdate] = @existing_store.lastorderupdate
-    end
+        session[:shopifyshop] = nil
+        session[:shopifyshop] ||= {}	
+        session[:shopifyshop][:currency] = @existing_store.currency
+        session[:shopifyshop][:name] = @existing_store.name
+        session[:shopifyshop][:charged] = false
+        
+        if @existing_store.lastorderupdate.blank?
+          session[:shopifyshop][:lastupdate] = Datetime.now.strftime("%F %H:%M")
+        else
+          session[:shopifyshop][:lastupdate] = @existing_store.lastorderupdate
+        end
     end 
     delayedjoborderfetchstart
 end
-    ##### End Check shopify store currency format
-   # if @existing_store.blank?
-    #  delayedjoborderfetchstart
-    #end
+##### End Check shopify store properties
+
       check_orders(Time.now.year)     
  end
  

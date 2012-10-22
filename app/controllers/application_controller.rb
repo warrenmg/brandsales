@@ -2,12 +2,13 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   prepend_around_filter :shopify_session
-  before_filter :ensure_merchant_has_paid, :except => 'confirm', :except => 'pull_all_orders', :except => 'login'
+  before_filter :ensure_merchant_has_paid, :except => 'confirm', :except => 'login'
     
     def ensure_merchant_has_paid
       #  puts 'Shop been charged?' + session[:shopifyshop][:charged].to_s
       if session[:shopifyshop].blank?
            session[:shopifyshop] ||= {}
+           session[:shopifyshop][:charged] = false
       end
        # puts "CHECKING FOR CHARGE"
         if session[:shopifyshop][:charged] == false
@@ -18,11 +19,13 @@ class ApplicationController < ActionController::Base
              
           #   puts "START CHARGE"
              charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic plan", 
-                                                               :price => 2.0, 
-                                                               :return_url => 'http://brandsales.78e.co.uk/charge/confirm',:test => true)
+                                                               :price => 3.0, 
+                                                               :return_url => 'http://0.0.0.0:3000/charge/confirm',
+                                                               :test => true)
            redirect_to ShopifyAPI::RecurringApplicationCharge.pending.first.confirmation_url #charge.confirmation_url
           else
             # puts "SETTING CHARGED TO TRUE"
+             #:return_url => 'http://brandsales.78e.co.uk/charge/confirm',
              session[:shopifyshop][:charged] = true
           end
         

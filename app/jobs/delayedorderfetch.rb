@@ -1,14 +1,14 @@
 class Delayedorderfetch 
 
   def perform(lastorderupdate,shopifyurl,shopify_session)
-    puts "Is session valid? #{shopify_session.valid?}"
+    #puts "Is session valid? #{shopify_session.valid?}"
     ActiveResource::Base.site = shopify_session.site
 
       @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{shopifyurl}'")
 
      @lastorderid.each do |topid|
        @shopifysinceid = topid.shopifyorderid
-        puts "Last order ID: #{topid.shopifyorderid}"
+       # puts "Last order ID: #{topid.shopifyorderid}"
      end
           @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
           if @orderscount > 0
