@@ -1,4 +1,4 @@
-<div>
+<div id="noorders">
 <% if !@o_years.blank? %>
 <% if @order_year %><div class="ordernav">
    <select id="war_reg">
@@ -7,23 +7,20 @@
     	         <% end %>	           
 	       </select>
   <% end %>  <% end %> 
-<div id="preloader"><img src="/images/ajax-loader-1.gif" /></div></div>
-
+<div id="preloader"><img src="/images/ajax-loader-1.gif" /></div><div class="fetchorders" id="fetchorders2" style="display: inline;"><a href="/delayedjoborderfetch" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div></div>
 <div id="orders">	
  <div id="result">
   <% if @local_orders.blank? %> 
 <script type="text/javascript">
-//showHidePreloader(true); 
+
+	document.getElementById('fetchorders2').style.display = 'none';
+
 </script>
+	<div>
     <em class="note">We are fetching all yours orders now. <br />
 	<strong>Please be patient</strong>, this first time it could take quite a few minutes...</em>
-	
+	</div>
   <% else %>
-<script type="text/javascript">
-//	showHidePreloader(false); 
-</script>
-
-<div class="fetchorders"><a href="/delayedjoborderfetch" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div>
 <% @localcurrency = session[:shopifyshop][:currency] %>
  <table>
   <tr>
@@ -101,12 +98,22 @@ $('document').ready(function(){
 
 });
 //var alertTimerId = 0;
-<% unless @job_id.blank? %>
+<% 
+unless params[:job_id].blank?
+	#@job_id ||= {}
+	jobid = params[:job_id]
+	#@job_id.id = params[:job_id]
+end
+unless @job_id.blank?
+	jobid = @job_id.id
+end
+unless jobid.blank? 
+%>
 showHidePreloader(true);
-setTimeout("checkonjob()",3000);
+setTimeout("checkonjob()",4000);
 
 function checkonjob() {
-	$.get("/home/checkjob",{job_id: <%=@job_id.id %>}, function(data){
+	$.get("/home/checkjob",{job_id: <%=jobid %>}, function(data){
 	//alert("Data Loaded: " + data);
 	if (data == 'WORKING'){
 		setTimeout("checkonjob()",5000);

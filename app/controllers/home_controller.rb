@@ -91,7 +91,7 @@ end
  def delayedjoborderfetch
     fetchorders = Delayedorderfetch.new
      @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
-     redirect_to :action => 'index'
+     redirect_to :action => 'index', :job_id => @job_id.id
  end
  
  def delayedjoborderfetchstart
