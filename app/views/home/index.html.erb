@@ -1,4 +1,4 @@
-<div id="noorders">
+<div>
 <% if !@o_years.blank? %>
 <% if @order_year %><div class="ordernav">
    <select id="war_reg">
@@ -6,8 +6,12 @@
 	          	        <option value="<%= w %>"><%= w %></option>
     	         <% end %>	           
 	       </select>
-  <% end %>  <% end %> 
+  <% end %>  <% 
+else %>
+	<div class="noorders">
+<% end %> 
 <div id="preloader"><img src="/images/ajax-loader-1.gif" /></div><div class="fetchorders" id="fetchorders2" style="display: inline;"><a href="/delayedjoborderfetch" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div></div>
+<% if @o_years.blank? %></div> <% end %>
 <div id="orders">	
  <div id="result">
   <% if @local_orders.blank? %> 
