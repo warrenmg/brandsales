@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121019200804) do
+ActiveRecord::Schema.define(:version => 20121026123834) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(:version => 20121019200804) do
     t.datetime "cancelled_at"
     t.string   "gateway"
     t.string   "processing_method"
+    t.boolean  "taxes_included"
   end
 
   create_table "shopifystores", :force => true do |t|

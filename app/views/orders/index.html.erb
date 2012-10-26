@@ -9,6 +9,9 @@
     <th>Order Date</th>
     <th>No of items</th>
     <th>Price</th>
+ <th>Sub total</th>
+ <th>Total Tax</th>
+ <th>Tax Included?</th>
     <th>Vendor Name</th>
 	<th>Paid Status</th>
 	<th>Shipped Status</th>
@@ -26,6 +29,9 @@
     <td><%= order.order_date.strftime("%m/%d/%y %I:%M%p").downcase() %></td>
     <td><%= order.no_of_items %></td>
     <td><%= order.price %></td>
+  <td><%= order.subtotal_price %></td>
+  <td><%= order.total_tax %></td>
+  <td><%= order.taxes_included %></td>
     <td><%= order.vendor_name %></td>
   	<td><%= order.paid_status %></td>
   	<td><%= order.shipped_status %></td>

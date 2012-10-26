@@ -12,6 +12,7 @@ else %>
 	<div class="noorders">
 <% end %> 
 <div id="preloader"><img src="/images/ajax-loader-1.gif" /></div><div class="fetchorders" id="fetchorders2" style="display: inline;"><a href="/delayedjoborderfetch" onclick="showHidePreloader(true);">Fetch Latest Orders</a></div></div>
+
 <% if @o_years.blank? %></div> <% end %>
 <div id="orders">	
  <div id="result">
@@ -48,16 +49,23 @@ else %>
 				<% @monthtotal[m] = 0 %>
 		<% end %>
    <% @local_orders.each do |l| %>
-	<% @monthtotal[l.month_list.to_i] += (l.totcost).to_d    %>
+	<%
+	if params[:showtax] == 'yes' or params[:showtax].blank?
+		vendortotalformonth = l.taxesincludedtotal
+	else
+		vendortotalformonth = l.notaxestotal
+	end
+	
+	%>
+	<% @monthtotal[l.month_list.to_i] += (vendortotalformonth).to_d    %>
    	<% if l.vendor_name == v.vendor %>
    		<% @m.each do |m| %>
 		
      		<% if l.month_list == m.to_s %>
-				
      			<% @years[v.vendor] ||= {}%>
      			<% @years[v.vendor][m] ||= [] %>
-     			<% @years[v.vendor][m] << number_to_currency(l.totcost, :unit => @localcurrency) %>
-	 			<% @newbrandtotal += (l.totcost).to_d  %>
+     			<% @years[v.vendor][m] << number_to_currency(vendortotalformonth, :unit => @localcurrency) %>
+	 			<% @newbrandtotal += (vendortotalformonth).to_d  %>
 	 			<% @years[v.vendor][13] = @newbrandtotal.to_s %>
      		<% end %>
     	<% end %>
@@ -85,7 +93,7 @@ else %>
      	<% end %>
 		
     <% else %>
-        	<td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td>
+        	<td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td><td><%= number_to_currency(0,:unit => @localcurrency) %></td>
     <% end %>
 </tr> 
      <% end %>
@@ -95,16 +103,22 @@ else %>
   </table>
   <% end %>
   </div>
+</div><p>
+<% 
+if params[:showtax] == 'yes' or params[:showtax].blank? %>
+<a href="/home?showtax=no">Show Sales Without Taxes</a>
+<% else %>
+<a href="/home?showtax=yes">Show Sales With Taxes</a>
+<% end %></p>
 </div>
-</div>
-
+<% if !@years.blank? %> 
 <script type="text/javascript">
 var chart1; // globally available
 $(document).ready(function() {
       chart1 = new Highcharts.Chart({
          chart: {
             renderTo: 'salesgraph',
-            type: 'line'
+            type: 'area'
          },
          title: {
             text: 'Sales By Month'
@@ -114,12 +128,12 @@ $(document).ready(function() {
          },
          yAxis: {
             title: {
-               text: 'Fruit eaten'
+               text: '<%=@localcurrency %>'
             }
          },
          series: [{
             name: 'Month Total',
-            data: [<% @m.each do |m| %><%=@monthtotal[m] %>,<% end %>]
+            data: [<% @m.each do |m| %><%=@monthtotal[m].round(2) %>,<% end %>]
          }//, {
            // name: 'John',
            // data: [5, 7, 3]
@@ -129,6 +143,7 @@ $(document).ready(function() {
    });
 
 </script>
+<% end %>
 <script type="text/javascript">
 $('document').ready(function(){
 

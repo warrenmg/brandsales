@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.find(:all,:limit => 150, :order => "order_date DESC", :conditions => ["shopify_owner = ? ",current_shop.url])
+    @orders = Order.find(:all,:limit => 100, :order => "order_date DESC", :conditions => ["shopify_owner = ? ",current_shop.url])
 
     respond_to do |format|
       format.html # index.html.erb

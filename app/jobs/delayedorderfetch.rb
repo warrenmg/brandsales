@@ -19,7 +19,7 @@ class Delayedorderfetch
             puts "Order Count: #{@orderscount}" 
            while @page <= @noofpages
                puts "Current Page #{@page }"
-              @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :since_id => @shopifysinceid, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :since_id => @shopifysinceid, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,cancelled_at,gateway,processing_method" })
+              @orders.blank? ? @orders = ShopifyAPI::Order.find(:all, :params => {:limit => 250, :page => 1, :since_id => @shopifysinceid, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,taxes_included,cancelled_at,gateway,processing_method" }) : @orders += ShopifyAPI::Order.find(:all, :params => {:limit => 250, :since_id => @shopifysinceid, :page => @page, :status => "any", :fields => "created_at,id,name,total-price,currency,financial_status,fulfillment_status,line_items,cancel_reason,subtotal_price,total_tax,taxes_included,cancelled_at,gateway,processing_method" })
              @page += 1
             end
           end   
@@ -46,6 +46,7 @@ class Delayedorderfetch
                 @order.shipped_status = line_item.fulfillment_status
                 @order.paid_status = shop_order.financial_status
                 @order.subtotal_price = shop_order.subtotal_price
+                @order.taxes_included = shop_order.taxes_included
                 @order.total_tax = shop_order.total_tax
                 @order.cancelled_at = shop_order.cancelled_at
                 @order.gateway = shop_order.gateway
