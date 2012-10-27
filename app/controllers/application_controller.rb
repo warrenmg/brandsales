@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
           #   puts "START CHARGE"
              charge = ShopifyAPI::RecurringApplicationCharge.create(:name => "Basic Plan", 
                                                                :price => 3.0, 
+                                                               :trial_days => 7,
                                                                :return_url => 'http://brandsales.78e.co.uk/charge/confirm')
            redirect_to ShopifyAPI::RecurringApplicationCharge.pending.first.confirmation_url #charge.confirmation_url
           else
