@@ -21,7 +21,7 @@ else %>
 </script>
 	<div>
     <em class="note">We are fetching all yours orders now. <br />
-	<strong>Please be patient</strong>, this first time it could take quite a few minutes...</em>
+	You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> minutes</strong> to fetch. The spinning circle will stop you when this is complete.</em>
 	</div>
   <% else %>
 <% @localcurrency = session[:shopifyshop][:currency] %>

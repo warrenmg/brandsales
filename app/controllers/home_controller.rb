@@ -31,7 +31,6 @@ class HomeController < ApplicationController
   end
   
   def index
-    #puts session[:shopifyshop].inspect
 
 ###### Check shopify store properties
 if session[:shopifyshop][:name].blank?
@@ -57,14 +56,22 @@ if session[:shopifyshop][:name].blank?
          session[:shopifyshop] ||= {}
          session[:shopifyshop][:currency] = coder.decode(@mystore.money_format.chomp("{{amount}}"))  
          session[:shopifyshop][:name] = @mystore.name
+         session[:shopifyshop][:email] = @mystore.email
          session[:shopifyshop][:charged] = false
          session[:shopifyshop][:lastupdate] = Time.now.strftime("%F %H:%M")
-
+         
+         @orderscount = ShopifyAPI::Order.count(:status => "any")
+         if @orderscount > 0
+            @estimatedtime = @orderscount.div(60)
+         else
+            @estimatedtime = 10
+         end
     else
         session[:shopifyshop] = nil
         session[:shopifyshop] ||= {}	
         session[:shopifyshop][:currency] = @existing_store.currency
         session[:shopifyshop][:name] = @existing_store.name
+        session[:shopifyshop][:email] = @existing_store.email
         session[:shopifyshop][:charged] = false
         
         if @existing_store.lastorderupdate.blank?
@@ -82,13 +89,13 @@ end
  
  def delayedjoborderfetch
     fetchorders = Delayedorderfetch.new
-     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email])
      redirect_to :action => 'index', :job_id => @job_id.id
  end
  
  def delayedjoborderfetchstart
     fetchorders = Delayedorderfetch.new
-     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify])
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email])
  end
  
  def build_years
