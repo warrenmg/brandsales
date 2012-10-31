@@ -19,10 +19,17 @@ else %>
 <script type="text/javascript">
 	document.getElementById('fetchorders2').style.display = 'none';
 </script>
-	<div>
-    <em class="note">We are fetching all yours orders now. <br />
-	You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> minutes</strong> to fetch. The spinning circle will stop you when this is complete.</em>
+		<% if @orderscount.blank? %>
+			<div><em class="note">We are fetching all yours orders now. <br /></em>
+			</div>
+		
+		<% else %>
+    	<div><em class="note">We are fetching all yours orders now. <br />
+	You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> minutes</strong> to fetch. The spinning circle will stop you when this is complete.<br />
+	Don't worry we will also email you when the import has finished, so you can close this screen if you want.
+	</em>
 	</div>
+	<% end %>
   <% else %>
 <% @localcurrency = session[:shopifyshop][:currency] %>
  <table>
@@ -133,15 +140,7 @@ $(document).ready(function() {
             data: [<% @m.each do |m| %><%=@monthtotal[m].round(2) %>,<% end %>]
          }]
       });
-	  // the button handler
-	   // $('#button').click(function() {
-	    //    if (chart1.series.length == 1) {
-	     //       chart1.addSeries({
-	      //          data: [19400.1, 9500.6, 5400.4, 2900.9, 7100.5, 10600.4, 12900.2, 14400.0, 17600.0, 13500.6, 14800.5, 21600.4]        
-	       //     });
-	       // }
-	   // });
-	//  button handler end
+	 
 <% @local_vendors.each do |v| %>
 	// Each Vendor
 	    $('#<%=url_friendly(v.vendor)%>').click(function() {
