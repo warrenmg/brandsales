@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  shopifystores_id: 1
+  shopify_customer_id: 1
+  first_name: MyString
+  last_name: MyString
+  country: MyString
+  tags: MyString
+  state: MyString
+
+two:
+  shopifystores_id: 1
+  shopify_customer_id: 1
+  first_name: MyString
+  last_name: MyString
+  country: MyString
+  tags: MyString
+  state: MyString
