@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121026123834) do
+ActiveRecord::Schema.define(:version => 20121031213346) do
+
+  create_table "customers", :force => true do |t|
+    t.integer  "shopifystores_id"
+    t.integer  "shopify_customer_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "country"
+    t.string   "tags"
+    t.string   "state"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -47,6 +59,23 @@ ActiveRecord::Schema.define(:version => 20121026123834) do
     t.string   "gateway"
     t.string   "processing_method"
     t.boolean  "taxes_included"
+    t.integer  "customer_id"
+    t.float    "tax_line"
+    t.integer  "shopifystores_id"
+    t.integer  "product_id"
+  end
+
+  create_table "products", :force => true do |t|
+    t.integer  "shopifystores_id"
+    t.string   "title"
+    t.integer  "shopify_product_id"
+    t.string   "tags"
+    t.string   "product_type"
+    t.float    "price"
+    t.string   "sku"
+    t.integer  "inventory_qty"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "shopifystores", :force => true do |t|
