@@ -44,11 +44,11 @@ class Delayedorderfetch
     
     @shopifyshop = shopifyshop
     
-    fetchcustomers(@shopifyshop.id)
+    fetchcustomers(@shopifyshop[:storeid])
     
     #puts @shopifyshop
     
-    @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{shopifyurl}'")
+    @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopifystores_id= '#{@shopifyshop[:storeid]}'")
 
      @lastorderid.each do |topid|
        @shopifysinceid = topid.shopifyorderid
@@ -65,7 +65,7 @@ class Delayedorderfetch
 
    if @orders  ###  22222
       @orders.each do |shop_order| 
-          @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopify_name => shop_order.name)
+          @existing_order = Order.where(:shopify_order_id => shop_order.id, :shopifystores_id => @shopifyshop[:storeid])
           if @existing_order.blank?
              if shop_order.financial_status = "authorized" or shop_order.financial_status = "paid"  then 
                 shop_order.line_items.each do |line_item| 
