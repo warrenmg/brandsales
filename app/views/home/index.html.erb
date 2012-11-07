@@ -24,8 +24,7 @@ else %>
 			</div>
 		
 		<% else %>
-    	<div><em class="note">We are fetching all yours orders now. <br />
-	You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> minutes</strong> to fetch. The spinning circle will stop you when this is complete.<br />
+    	<div><em class="note">You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> seconds</strong> to fetch. The spinning circle will stop you when this is complete.<br />
 	Don't worry we will also email you when the import has finished, so you can close this screen if you want.
 	</em>
 	</div>
@@ -115,8 +114,9 @@ if params[:showtax] == 'yes' or params[:showtax].blank? %>
 <a href="/home?showtax=yes">Show Sales With Taxes</a>
 <% end %></p>
 </div>
-<% if !@years.blank? %> 
+
 <script type="text/javascript">
+<% if !@years.blank? %> 
 var chart1; // globally available
 $(document).ready(function() {
       chart1 = new Highcharts.Chart({
@@ -155,7 +155,7 @@ $(document).ready(function() {
 	});
 	//  vendor handler end
 <% end %><% end %>	
-	// vendor input
+
    });
 </script>
 

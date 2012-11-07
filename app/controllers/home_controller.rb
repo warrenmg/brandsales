@@ -58,6 +58,7 @@ if session[:shopifyshop][:name].blank?
          session[:shopifyshop][:name] = @mystore.name
          session[:shopifyshop][:email] = @mystore.email
          session[:shopifyshop][:charged] = false
+         session[:shopifyshop][:storeid] =  @shopifystore.id
          session[:shopifyshop][:lastupdate] = Time.now.strftime("%F %H:%M")
          
          @orderscount = ShopifyAPI::Order.count(:status => "any")
@@ -73,7 +74,7 @@ if session[:shopifyshop][:name].blank?
         session[:shopifyshop][:name] = @existing_store.name
         session[:shopifyshop][:email] = @existing_store.email
         session[:shopifyshop][:charged] = false
-        
+        session[:shopifyshop][:storeid] =  @existing_store.id
         if @existing_store.lastorderupdate.blank?
           session[:shopifyshop][:lastupdate] = Datetime.now.strftime("%F %H:%M")
         else
@@ -89,13 +90,13 @@ end
  
  def delayedjoborderfetch
     fetchorders = Delayedorderfetch.new
-     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email])
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email],session[:shopifyshop])
      redirect_to :action => 'index', :job_id => @job_id.id
  end
  
  def delayedjoborderfetchstart
     fetchorders = Delayedorderfetch.new
-     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email])
+     @job_id = fetchorders.delay.perform(session[:shopifyshop][:lastupdate],session[:shopify].url,session[:shopify],session[:shopifyshop][:email],session[:shopifyshop])
  end
  
  def build_years
@@ -110,9 +111,8 @@ end
  end
  
  
- def pull_all_orders
-   
-   @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{current_shop.url}'")
+ def pull_all_orders 
+  @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{current_shop.url}'")
 
   @lastorderid.each do |topid|
     @shopifysinceid = topid.shopifyorderid
