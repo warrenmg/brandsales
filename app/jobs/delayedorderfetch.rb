@@ -46,8 +46,6 @@ class Delayedorderfetch
     
     fetchcustomers(@shopifyshop[:storeid])
     
-    #puts @shopifyshop
-    
     @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopifystores_id= '#{@shopifyshop[:storeid]}'")
 
      @lastorderid.each do |topid|

@@ -24,7 +24,7 @@ else %>
 			</div>
 		
 		<% else %>
-    	<div><em class="note">You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= (@orderscount.div(60)+1) %> seconds</strong> to fetch. The spinning circle will stop you when this is complete.<br />
+    	<div><em class="note">You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= distance_of_time_in_words(@orderscount.div(60)+1) %> seconds</strong> to fetch. The spinning circle will stop you when this is complete.<br />
 	Don't worry we will also email you when the import has finished, so you can close this screen if you want.
 	</em>
 	</div>
