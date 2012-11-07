@@ -1,7 +1,7 @@
 class Delayedorderfetch 
   
-  def fetchcustomers()
-     @lastcustomerid = Customer.find_by_sql("select max(shopify_customer_id) as shopify_customer_id from customers where shopifystores_id=#{@shopifystoreid}")
+  def fetchcustomers(shopifystoreid)
+     @lastcustomerid = Customer.find_by_sql("select max(shopify_customer_id) as shopify_customer_id from customers where shopifystores_id=#{shopifystoreid}")
 
        @lastcustomerid.each do |topid|
          @shopifycustomersinceid = topid.shopify_customer_id
@@ -44,7 +44,7 @@ class Delayedorderfetch
     
     @shopifyshop = shopifyshop
     
-    fetchcustomers
+    fetchcustomers(@shopifyshop.id)
     
     #puts @shopifyshop
     
