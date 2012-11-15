@@ -76,8 +76,8 @@ end
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
-gem "shopify_app", "~> 2.1.2"
-gem 'shopify_api', '~>2.3.0'
+gem 'shopify_app'
+gem 'shopify_api', '~>3.0.3'
 
 gem 'jquery_datepicker'
 gem 'therubyracer'

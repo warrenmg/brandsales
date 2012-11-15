@@ -24,9 +24,8 @@ else %>
 			</div>
 		
 		<% else %>
-    	<div><em class="note">You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= distance_of_time_in_words(@orderscount.div(60)+1) %> seconds</strong> to fetch. The spinning circle will stop you when this is complete.<br />
+    	<div>You have <strong><%= @orderscount %></strong> orders which we think will take <strong><%= distance_of_time_in_words(@orderscount.div(60)+1) %> </strong> to fetch. The spinning circle will stop you when this is complete.<br />
 	Don't worry we will also email you when the import has finished, so you can close this screen if you want.
-	</em>
 	</div>
 	<% end %>
   <% else %>
@@ -108,11 +107,16 @@ else %>
   </div>
 </div><p>
 <% 
+if @orderscount.blank?
 if params[:showtax] == 'yes' or params[:showtax].blank? %>
 <a href="/home?showtax=no">Show Sales Without Taxes</a>
 <% else %>
 <a href="/home?showtax=yes">Show Sales With Taxes</a>
-<% end %></p>
+<% 
+end 
+end
+
+%></p>
 </div>
 
 <script type="text/javascript">

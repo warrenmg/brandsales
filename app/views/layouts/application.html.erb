@@ -13,7 +13,7 @@
     <h1><%= link_to 'Brand Sales Report', '/' %></h1>
     
     <p id="login-link">
-      <% if current_shop %>
+      <% if shop_session %>
           <span class="note">current shop</span> <%= link_to current_shop.url, "https://#{current_shop.url}", :class => 'shop_name' %> <span class="note">|</span>
           <%#= link_to 'List Orders', orders_path %><span class="note">|</span>
           <%= link_to 'logout', logout_path %>

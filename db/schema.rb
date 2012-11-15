@@ -11,7 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121031213346) do
+ActiveRecord::Schema.define(:version => 20121115111815) do
+
+  create_table "customergroups", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "shopifystores_id"
+    t.integer  "customergroup_id"
+  end
+
+  add_index "customergroups", ["customergroup_id"], :name => "index_customergroups_on_customergroup_id"
+
+  create_table "customergroups_customers", :force => true do |t|
+    t.integer  "customergroup_id"
+    t.integer  "customer_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "shopifystores_id"
+  end
 
   create_table "customers", :force => true do |t|
     t.integer  "shopifystores_id"

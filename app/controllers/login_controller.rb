@@ -11,8 +11,10 @@ skip_filter :ensure_merchant_has_paid
   end
   
   def authenticate
-    if params[:shop].present?
-      redirect_to ShopifyAPI::Session.new(params[:shop].to_s.strip).create_permission_url
+   # if params[:shop].present?
+   if shop_name = sanitize_shop_param(params)
+      #redirect_to ShopifyAPI::Session.new(params[:shop].to_s.strip).create_permission_url
+      redirect_to "/auth/shopify?shop=#{shop_name}"
     else
       redirect_to return_address
     end
@@ -50,6 +52,13 @@ skip_filter :ensure_merchant_has_paid
   end
   
   protected
+  
+  def sanitize_shop_param(params)
+      return unless params[:shop].present?
+      name = params[:shop].to_s.strip
+      name += '.myshopify.com' if !name.include?("myshopify.com") && !name.include?(".")
+      name.sub('https://', '').sub('http://', '')
+    end
   
   def return_address
   puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
