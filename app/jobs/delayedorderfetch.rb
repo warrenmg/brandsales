@@ -110,17 +110,16 @@ class Delayedorderfetch
  #    end  ###  UPDATE DATABASE WITH CUSTOMERS
   end
   
-  
-
   def perform(lastorderupdate,shopifyurl,shopify_session,shopifyemail,shopifyshop)
     #puts "Is session valid? #{shopify_session.valid?}"
-    ActiveResource::Base.site = shopify_session.site
+    #ActiveResource::Base.site = shopify_session.site
+    ShopifyAPI::Base.activate_session(shopify_session) 
     
     @shopifyshop = shopifyshop
     
     fetchcustomers(@shopifyshop[:storeid])
     
-    fetchcustomersgroups(@shopifyshop[:storeid])
+    #fetchcustomersgroups(@shopifyshop[:storeid])
     
     fetch_customers_by_groups(@shopifyshop[:storeid])
     

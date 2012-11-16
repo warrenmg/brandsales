@@ -2,6 +2,8 @@ Brandsales::Application.routes.draw do
   resources :orders
   resources :shopifystores
   
+  match 'auth/shopify/callback' => 'login#finalize'
+  
   match '/charge/confirm'    => 'charge#confirm', :as => :confirm
   match 'charge'    => 'charge#index', :as => :charge
   
@@ -21,6 +23,8 @@ Brandsales::Application.routes.draw do
   match 'login/finalize'     => 'login#finalize',     :as => :finalize
 
   match 'login/logout'       => 'login#logout',       :as => :logout
+  
+  
   match 'initial_pull'       => 'home#initial_pull', :as => 'initial_pull'
   match 'pull_all_orders'    => 'home#pull_all_orders', :as => 'pull_all_orders'
   match 'delayedjoborderfetch'    => 'home#delayedjoborderfetch', :as => 'delayedjoborderfetch'

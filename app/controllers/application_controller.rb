@@ -40,13 +40,12 @@ class ApplicationController < ActionController::Base
  def check_order_owner
   order = Order.find(params[:id])
   if order
-  	if order.shopify_owner == current_shop.url
-  	   #puts "@@@@@@@@@@@@@@@@@@@@@@@@"
+  	if order.shopify_owner == shop_session.url
   	   return true
   	end
   end
   
-  if (order.blank? or order.shopify_owner != current_shop.url)
+  if (order.blank? or order.shopify_owner != shop_session.url)
   	redirect_to orders_url
   end
   

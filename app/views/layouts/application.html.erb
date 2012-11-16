@@ -14,7 +14,7 @@
     
     <p id="login-link">
       <% if shop_session %>
-          <span class="note">current shop</span> <%= link_to current_shop.url, "https://#{current_shop.url}", :class => 'shop_name' %> <span class="note">|</span>
+          <span class="note">current shop</span> <%= link_to shop_session.url, "https://#{shop_session.url}", :class => 'shop_name' %> <span class="note">|</span>
           <%#= link_to 'List Orders', orders_path %><span class="note">|</span>
           <%= link_to 'logout', logout_path %>
       <% end %>

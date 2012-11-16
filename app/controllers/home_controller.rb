@@ -100,8 +100,8 @@ end
  end
  
  def build_years
-     #@o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{current_shop.url}'")
-      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date)) as year_list from orders where shopify_owner= '#{current_shop.url}'")
+     #@o_years = Order.find_by_sql("select DISTINCT(year(order_date)) year_list from orders where shopify_owner= '#{shop_session.url}'")
+      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date)) as year_list from orders where shopify_owner= '#{shop_session.url}'")
      if @o_years
      @order_year = []
      @o_years.each do |oy|
@@ -112,7 +112,7 @@ end
  
  
  def pull_all_orders 
-  @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{current_shop.url}'")
+  @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopify_owner= '#{shop_session.url}'")
 
   @lastorderid.each do |topid|
     @shopifysinceid = topid.shopifyorderid
@@ -151,7 +151,7 @@ end
              @order.no_of_items =line_item.quantity
              @order.price = line_item.price
              @order.vendor_name = line_item.vendor
-             @order.shopify_owner = current_shop.url
+             @order.shopify_owner = shop_session.url
              @order.shipped_status = line_item.fulfillment_status
              @order.paid_status = shop_order.financial_status
              @order.subtotal_price = shop_order.subtotal_price
@@ -218,14 +218,14 @@ end
 #private
 
    def check_orders(yr)
-      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopify_owner= '#{current_shop.url}'")
+      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopify_owner= '#{shop_session.url}'")
       @order_year = []
       @o_years.each do |oy|
       @order_year << oy.year_list
    end
       
-      @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders where shopify_owner = '#{current_shop.url}' and price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,vendor_name order by vendor_name")
-      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopify_owner= '#{current_shop.url}' order by vendor_name"  )
+      @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders where shopify_owner = '#{shop_session.url}' and price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,vendor_name order by vendor_name")
+      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopify_owner= '#{shop_session.url}' order by vendor_name"  )
       @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 end
  

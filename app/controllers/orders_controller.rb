@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.find(:all,:limit => 100, :order => "order_date DESC", :conditions => ["shopify_owner = ? ",current_shop.url])
+    @orders = Order.find(:all,:limit => 100, :order => "order_date DESC", :conditions => ["shopify_owner = ? ",shop_session.url])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -80,7 +80,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order = Order.find(:conditions => ["id = ? and shopify_owner = ?", params[:id],current_shop.url])
+    @order = Order.find(:conditions => ["id = ? and shopify_owner = ?", params[:id],shop_session.url])
     @order.destroy
 
     respond_to do |format|
@@ -94,7 +94,7 @@ class OrdersController < ApplicationController
    startdate = params[:startdate].blank? ?  (Date.today - 7.days) : params[:startdate]
    enddate = params[:enddate].blank? ?  Date.today : params[:enddate] 
       
-   @orders = Order.find(:all,:conditions => ["shopify_owner = ? AND order_date > ? AND order_date <= ? ",current_shop.url,startdate.to_date,enddate.to_date])
+   @orders = Order.find(:all,:conditions => ["shopify_owner = ? AND order_date > ? AND order_date <= ? ",shop_session.url,startdate.to_date,enddate.to_date])
    if @orders
    respond_to do |format|
       format.html 
