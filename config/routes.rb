@@ -5,10 +5,11 @@ Brandsales::Application.routes.draw do
   match 'auth/shopify/callback' => 'login#finalize'
   
   match '/charge/confirm'    => 'charge#confirm', :as => :confirm
-  match 'charge'    => 'charge#index', :as => :charge
+  match 'charge'             => 'charge#index', :as => :charge
   
   match 'home'      => 'home#index'
-  
+  match 'customergroups'      => 'customergroups#index'
+  match 'customercountries'  => 'customercountries#index'
   match '/orders/search_orders/'     => 'orders#search_orders'
   match '/home/checkjob/'     => 'home#checkjob'
   

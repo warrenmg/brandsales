@@ -242,7 +242,7 @@ end
       end
       
       @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders where shopifystores_id = '#{session[:shopifyshop][:storeid]}' and price > 0 and subtotal_price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,vendor_name order by vendor_name")
-      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopifystores_id = '#{session[:shopifyshop][:storeid]}' order by vendor_name"  )
+      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where orders.subtotal_price > 0 and orders.cancelled_at is null and shopifystores_id = '#{session[:shopifyshop][:storeid]}' order by vendor_name"  )
       @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 end
  
