@@ -68,7 +68,7 @@ class Delayedorderfetch
                       @customergroup.customergroup_id = shop_customergroup.id
                       @customergroup.name = shop_customergroup.name
                       @customergroup.save
-                      fetch_customers_by_groups(shop_customergroup.id)
+                      #fetch_customers_by_groups(shop_customergroup.id)
                      # Customer.find(:all, :params => {:customer_group_id => shop_customergroup.id})
            end
         end 
