@@ -7,8 +7,6 @@ class HomeController < ApplicationController
   
   def checkjob
        @job = Delayed::Job.find_by_id(params[:job_id])
-      # puts "JOB ID: #{params[:job_id]}"
-      # puts "LOOKING INTO JOB: #{@job.inspect}"
        if @job.nil?
          # The job has completed and is no longer in the database.
          render :text => "OK"
@@ -24,9 +22,7 @@ class HomeController < ApplicationController
    end
    
   def welcome
-     
     current_host = "#{request.host}#{':' + request.port.to_s if request.port != 80}"
-    #current_host = "http://#{request.host+request.fullpath}"
     @callback_url = "http://#{current_host}/login/finalize"
   end
   
@@ -35,7 +31,6 @@ class HomeController < ApplicationController
 ###### Check shopify store properties
 if session[:shopifyshop][:name].blank?
     @existing_store = Shopifystores.where(:shopify_owner => session[:shopify].url).first
-    #puts @existing_store.inspect
       
     if @existing_store.blank?
          @mystore = ShopifyAPI::Shop.current
@@ -86,6 +81,10 @@ end
 ##### End Check shopify store properties
 
       check_orders(Time.now.year)     
+      
+        #@customergroupcount = ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => 7792059, :limit => 250, :page => 1, :fields => "id,name" })
+        #ShopifyAPI::Customer.count(:customer_group_id => 7792059)
+         
  end
  
  def delayedjoborderfetch
@@ -186,11 +185,8 @@ end
        end
        
         if @orders 
-
         @orders.each do |shop_order|
-          
-        #  puts shop_order.inspect
-        Order.update_all({:shipped_status => shop_order.fulfillment_status, :paid_status => shop_order.financial_status, :cancelled_at => shop_order.cancelled_at}, ["shopify_order_id = ?", shop_order.id])
+           Order.update_all({:shipped_status => shop_order.fulfillment_status, :paid_status => shop_order.financial_status, :cancelled_at => shop_order.cancelled_at}, ["shopify_order_id = ?", shop_order.id])
         end
       end
         puts  session[:shopifyshop][:lastupdate]
@@ -201,10 +197,31 @@ end
         @existing_store.save
          session[:shopifyshop][:lastupdate] =  Time.now.strftime("%F %H:%M")
       # Check for any orders updated since last order fetch END
-      #return true
      redirect_to :action => 'index'
  end
+ 
+   def select_orders_of_year_customergroups
+     if params[:year]
+        check_orders(params[:year])
+        render :partial => 'select_orders' 
+     else
+        redirect_to home_url
+     end
+   end
 
+ #private
+
+    def check_orders_customergroups(yr)
+       @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopifystores_id= '#{session[:shopifyshop][:storeid]}'")
+       @order_year = []
+       @o_years.each do |oy|
+          @order_year << oy.year_list
+       end
+
+       @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, customergroups.name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders, customergroups_customers, customergroups where  orders.customer_id = customergroups_customers.customer_id and customergroups_customers.customergroup_id = customergroups.customergroup_id and shopifystores_id = '#{session[:shopifyshop][:storeid]}' and price > 0 and subtotal_price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,customergroups.name  order by customergroups.name ")
+       @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopify_owner= '#{shop_session.url}' order by vendor_name"  )
+       @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
+    end
 
   def select_orders_of_year
     if params[:year]
@@ -218,14 +235,14 @@ end
 #private
 
    def check_orders(yr)
-      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopify_owner= '#{shop_session.url}'")
+      @o_years = Order.find_by_sql("select DISTINCT(extract(year from order_date))as year_list from orders where shopifystores_id= '#{session[:shopifyshop][:storeid]}'")
       @order_year = []
       @o_years.each do |oy|
-      @order_year << oy.year_list
-   end
+         @order_year << oy.year_list
+      end
       
-      @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders where shopify_owner = '#{shop_session.url}' and price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,vendor_name order by vendor_name")
-      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopify_owner= '#{shop_session.url}' order by vendor_name"  )
+      @local_orders = Order.find_by_sql("Select extract(year from order_date) as year_list, extract(month from order_date) as month_list, vendor_name,SUM(CASE WHEN taxes_included = true THEN price ELSE price + (total_tax /  (subtotal_price / price))  END) as taxesincludedtotal, sum(price * no_of_items) as totcost,SUM(CASE WHEN taxes_included = false THEN price ELSE price-(total_tax /  (subtotal_price / price))  END) as notaxestotal,sum(total_tax /  (subtotal_price / price)) as totaltax from orders where shopifystores_id = '#{session[:shopifyshop][:storeid]}' and price > 0 and subtotal_price > 0 and extract(year from order_date) = #{yr} and cancelled_at is null group by year_list,month_list,vendor_name order by vendor_name")
+      @local_vendors = Order.find_by_sql("select DISTINCT(vendor_name) as vendor from orders where shopifystores_id = '#{session[:shopifyshop][:storeid]}' order by vendor_name"  )
       @months=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 end
  
