@@ -147,7 +147,7 @@ $(document).ready(function() {
       });
 	 
 <% @local_vendors.each do |v| %>
-	    $('#<%=url_friendly(v.vendor)%>').click(function() {
+	    $('#<%=v.vendor.downcase.gsub(/[^a-zA-Z0-9]+/, '-').gsub(/-{2,}/, '-').gsub(/^-|-$/, '')%>').click(function() {
 			chart1.series[0].hide();
 	        if (chart1.series.length > 0) {
 	            chart1.addSeries({
