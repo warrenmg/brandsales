@@ -74,7 +74,7 @@ else %>
    <% end %>
   <% end # TEST END ADD %>
 <% @local_vendors.each do |v| # TEST END ADD %>
-<tr id="<%=url_friendly(v.vendor) %>">
+<tr id="<%=v.vendor.downcase.gsub(/[^a-zA-Z0-9]+/, '-').gsub(/-{2,}/, '-').gsub(/^-|-$/, '') %>">
  <th><%=v.vendor %></th>
      <% if !@years.blank? %> 
      	<% @years.each do |y| %>
