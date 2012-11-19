@@ -119,9 +119,9 @@ class Delayedorderfetch
     
     fetchcustomers(@shopifyshop[:storeid])
     
-    fetchcustomersgroups(@shopifyshop[:storeid])
+    #fetchcustomersgroups(@shopifyshop[:storeid])
     
-    fetch_customers_by_groups(@shopifyshop[:storeid])
+    #fetch_customers_by_groups(@shopifyshop[:storeid])
     
     @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopifystores_id= '#{@shopifyshop[:storeid]}'")
 

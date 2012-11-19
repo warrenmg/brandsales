@@ -147,7 +147,6 @@ $(document).ready(function() {
       });
 	 
 <% @local_vendors.each do |v| %>
-	// Each Vendor
 	    $('#<%=url_friendly(v.vendor)%>').click(function() {
 			chart1.series[0].hide();
 	        if (chart1.series.length > 0) {
@@ -158,9 +157,7 @@ $(document).ready(function() {
 	});
 	}
 	});
-	//  vendor handler end
 <% end %><% end %>	
-
    });
 </script>
 
@@ -179,7 +176,9 @@ $('document').ready(function(){
    });
 
 });
-//var alertTimerId = 0;
+</script>
+
+
 <% 
 unless params[:job_id].blank?
 	#@job_id ||= {}
@@ -191,6 +190,7 @@ unless @job_id.blank?
 end
 unless jobid.blank? 
 %>
+<script type="text/javascript">
 showHidePreloader(true);
 setTimeout("checkonjob()",4000);
 
@@ -210,7 +210,5 @@ function checkonjob() {
 		//clearTimeout(alertTimerId);
 	}
 	});	
-	
-	
 }
 </script><% end %>
