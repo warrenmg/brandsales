@@ -58,7 +58,7 @@ class Delayedorderfetch
           
           # @customers_in_group
 
-     if @customersgroup  ###  UPDATE DATABASE WITH CUSTOMERS
+     if @customersgroup  ###  UPDATE DATABASE WITH GROUPS
         @customersgroup.each do |shop_customergroup| 
             @existing_customer = Customergroups.where(:customergroup_id => shop_customergroup.id, :shopifystores_id => @shopifyshop[:storeid])
             if @existing_customer.blank?
@@ -68,11 +68,28 @@ class Delayedorderfetch
                       @customergroup.customergroup_id = shop_customergroup.id
                       @customergroup.name = shop_customergroup.name
                       @customergroup.save
+                      @cgroup = ShopifyAPI::CustomerGroup.find(shop_customergroup.id)
+                      @customers = @cgroup.get(:customers)
+                      if @customers ###  UPDATE DATABASE WITH CUSTOMERS
+                           @customers.each do |customergroup_cust| 
+                              puts customergroup_cust[:id]
+                               @existing_customer = CustomergroupsCustomers.where(:customergroup_id => shop_customergroup.id,:customer_id => customergroup_cust[:id], :shopifystores_id => @shopifyshop[:storeid])
+                              if @existing_customer.blank?
+
+                                         @customergroup= CustomergroupsCustomers.new
+                                         @customergroup.shopifystores_id = shopifystoreid
+                                         @customergroup.customergroup_id =  customers_customergroup.customergroup_id
+                                         @customergroup.customer_id = customergroup_cust.id
+                                         @customergroup.save
+                             end
+                           end 
+                        end  ###  UPDATE DATABASE WITH CUSTOMERS
                       #fetch_customers_by_groups(shop_customergroup.id)
                      # Customer.find(:all, :params => {:customer_group_id => shop_customergroup.id})
            end
         end 
      end  ###  UPDATE DATABASE WITH CUSTOMERS
+     
   end
   
   def fetch_customers_by_groups(shopifystoreid)
@@ -83,30 +100,56 @@ class Delayedorderfetch
         
         @customer_groups = Customergroups.where(:shopifystores_id => @shopifyshop[:storeid])
           @customer_groups.each do |customers_customergroup| 
-          @customergroupcount = ShopifyAPI::Customer.count(:params => {:customer_group_id => customers_customergroup.customergroup_id})
+          #@customergroupcount = ShopifyAPI::Customer.count(:params => {:customer_group_id => customers_customergroup.customergroup_id})
   
-           if @customergroupcount > 0
-              @page = 1
-              @noofpages = (@customergroupcount.div(250) + 1)
-              while @page <= @noofpages
-                @customersgroup.blank? ? @customersgroup = ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => customers_customergroup.customergroup_id, :limit => 250, :page => 1, :fields => "id,name" }) : @customersgroup += ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => customers_customergroup.customergroup_id, :limit => 250, :page => @page, :fields => "id,name" })
-                @page += 1
-              end
-          end   
+          # if @customergroupcount > 0
+          #    @page = 1
+          #    @noofpages = (@customergroupcount.div(250) + 1)
+          #    while @page <= @noofpages
+          #      @customersgroup.blank? ? @customersgroup = ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => customers_customergroup.customergroup_id, :limit => 250, :page => 1, :fields => "id,name" }) : @customersgroup += ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => customers_customergroup.customergroup_id, :limit => 250, :page => @page, :fields => "id,name" })
+          #      @page += 1
+          #    end
+          #end   
+          
+          @testdd = ShopifyAPI::Customer.find(:all, :params => {:customer_group_id => 7792059})
+           puts "TOT CUSTOMERS:#{@testdd.size}"
+          
+           group_id = customers_customergroup.customergroup_id
+           cusgroup = ShopifyAPI::CustomerGroup.find(group_id)
+           
+           #7792059
+          
+           
+           customers = cusgroup.get(:customers)
+           puts "TOT CUSTOMERS:#{customers.size}"
+           if customers ###  UPDATE DATABASE WITH CUSTOMERS
+                customers.each do |shop_customergroup| 
+                      puts shop_customergroup.inspect
+                   # @existing_customer = CustomergroupsCustomers.where(:customergroup_id => customers_customergroup.customergroup_id,:customer_id => shop_customergroup, :shopifystores_id => @shopifyshop[:storeid])
+                    #if @existing_customer.blank?
 
-     if @customersgroup  ###  UPDATE DATABASE WITH CUSTOMERS
-        @customersgroup.each do |shop_customergroup| 
-            @existing_customer = CustomergroupsCustomers.where(:customergroup_id => customers_customergroup.customergroup_id,:customer_id => shop_customergroup.id, :shopifystores_id => @shopifyshop[:storeid])
-            if @existing_customer.blank?
-  
-                      @customergroup= CustomergroupsCustomers.new
-                      @customergroup.shopifystores_id = shopifystoreid
-                      @customergroup.customergroup_id =  customers_customergroup.customergroup_id
-                      @customergroup.customer_id = shop_customergroup.id
-                      @customergroup.save
-           end
-        end 
-     end  ###  UPDATE DATABASE WITH CUSTOMERS
+                              @customergroup= CustomergroupsCustomers.new
+                              @customergroup.shopifystores_id = shopifystoreid
+                              @customergroup.customergroup_id = customers_customergroup.customergroup_id
+                             # @customergroup.customer_id =shop_customergroup.id
+                              @customergroup.save
+                  # end
+                end 
+             end  ###  UPDATE DATABASE WITH CUSTOMERS
+
+     #if @customersgroup  ###  UPDATE DATABASE WITH CUSTOMERS
+   #     @customersgroup.each do |shop_customergroup| 
+   #         @existing_customer = CustomergroupsCustomers.where(:customergroup_id => customers_customergroup.customergroup_id,:customer_id => shop_customergroup.id, :shopifystores_id => @shopifyshop[:storeid])
+   #         if @existing_customer.blank?
+ # 
+ #                     @customergroup= CustomergroupsCustomers.new
+ #                     @customergroup.shopifystores_id = shopifystoreid
+ #                     @customergroup.customergroup_id =  customers_customergroup.customergroup_id
+ #                     @customergroup.customer_id = shop_customergroup.id
+ #                     @customergroup.save
+ #          end
+ #       end 
+ #    end  ###  UPDATE DATABASE WITH CUSTOMERS
     end
   end
   
@@ -119,9 +162,9 @@ class Delayedorderfetch
     
     fetchcustomers(@shopifyshop[:storeid])
     
-    #fetchcustomersgroups(@shopifyshop[:storeid])
+    fetchcustomersgroups(@shopifyshop[:storeid])
     
-    #fetch_customers_by_groups(@shopifyshop[:storeid])
+    fetch_customers_by_groups(@shopifyshop[:storeid])
     
     @lastorderid = Order.find_by_sql("select max(shopify_order_id) as shopifyorderid from orders where shopifystores_id= '#{@shopifyshop[:storeid]}'")
 
