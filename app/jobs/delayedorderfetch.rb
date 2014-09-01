@@ -6,8 +6,12 @@ class Delayedorderfetch
 
        @lastcustomerid.each do |topid|
          @shopifycustomersinceid = topid.shopify_customer_id
+         
        end
+         @shopifycustomersinceid = 0 if(@shopifycustomersinceid.nil?)
+         
            @customercount = ShopifyAPI::Customer.count(:status => "any", :since_id => @shopifycustomersinceid)
+           
            if @customercount > 0
               @page = 1
               @noofpages = (@customercount.div(250) + 1)
@@ -39,12 +43,14 @@ class Delayedorderfetch
      end  ###  UPDATE DATABASE WITH CUSTOMERS
   end
   
-  def fetchcustomersgroups(shopifystoreid)
+  def fetchcustomersgroups(shopifystoreid) #Removed (uses deprecated end-point CusomerGroup)
      @lastcustomergroupid = Customergroups.find_by_sql("select max(customergroup_id) as shopify_customergroup_id from customergroups where shopifystores_id=#{shopifystoreid}")
 
        @lastcustomergroupid.each do |topid|
          @shopifycustomergroupsinceid = topid.shopify_customergroup_id
        end
+       
+           @shopifycustomergroupsinceid = 0 if(@shopifycustomergroupsinceid.nil?)
            @customercount = ShopifyAPI::CustomerGroup.count(:since_id => @shopifycustomergroupsinceid)
            if @customercount > 0
               @page = 1
@@ -162,7 +168,7 @@ class Delayedorderfetch
     
     fetchcustomers(@shopifyshop[:storeid])
     
-    fetchcustomersgroups(@shopifyshop[:storeid])
+    # fetchcustomersgroups(@shopifyshop[:storeid])
     
     #fetch_customers_by_groups(@shopifyshop[:storeid])
     
@@ -171,6 +177,8 @@ class Delayedorderfetch
      @lastorderid.each do |topid|
        @shopifysinceid = topid.shopifyorderid
      end
+     
+     @shopifysinceid = 0 if(@shopifysinceid.nil?)
          @orderscount = ShopifyAPI::Order.count(:status => "any", :since_id => @shopifysinceid)
          if @orderscount > 0
             @page = 1
