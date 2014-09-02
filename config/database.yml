@@ -6,8 +6,8 @@
 development:
   adapter: postgresql
   database: brandsales
-  username: 
-  password: 
+  username: brandsales
+  password: ywMdYNvi
   host: localhost
   encoding: UTF8
   pool: 5
@@ -25,8 +25,8 @@ test:
 production:
    adapter: postgresql
    database: brandsales
-   username: 
-   password: 
+   username: brandsales
+   password: ywMdYNvi
    host: localhost
    encoding: UTF8
    pool: 5
